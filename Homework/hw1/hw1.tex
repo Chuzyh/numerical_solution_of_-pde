@@ -1,0 +1,137 @@
+\documentclass{article}
+\usepackage{ctex, hyperref}
+%\usepackage[utf8]{inputenc}
+\usepackage[top=2cm, bottom=2cm, left=2cm, right=2cm]{geometry}  
+\usepackage{algorithm}  
+\usepackage{algpseudocode}  
+\usepackage{amsmath}
+\usepackage{float}  
+\usepackage{multirow}
+
+\usepackage{listings} 
+\usepackage{xcolor}
+\definecolor{mygreen}{rgb}{0,0.6,0}  
+\definecolor{mygray}{rgb}{0.5,0.5,0.5}  
+\definecolor{mymauve}{rgb}{0.58,0,0.82}  
+  
+\lstset{ %  
+  backgroundcolor=\color{white},   % choose the background color; you must add \usepackage{color} or \usepackage{xcolor}  
+  basicstyle=\footnotesize,        % the size of the fonts that are used for the code  
+  breakatwhitespace=false,         % sets if automatic breaks should only happen at whitespace  
+  breaklines=true,                 % sets automatic line breaking  
+  captionpos=bl,                    % sets the caption-position to bottom  
+  commentstyle=\color{mygreen},    % comment style  
+  deletekeywords={...},            % if you want to delete keywords from the given language  
+  escapeinside={\%*}{*)},          % if you want to add LaTeX within your code  
+  extendedchars=true,              % lets you use non-ASCII characters; for 8-bits encodings only, does not work with UTF-8  
+  frame=single,                    % adds a frame around the code  
+  keepspaces=true,                 % keeps spaces in text, useful for keeping indentation of code (possibly needs columns=flexible)  
+  keywordstyle=\color{blue},       % keyword style  
+  %language=Python,                 % the language of the code  
+  morekeywords={*,...},            % if you want to add more keywords to the set  
+  numbers=left,                    % where to put the line-numbers; possible values are (none, left, right)  
+  numbersep=5pt,                   % how far the line-numbers are from the code  
+  numberstyle=\tiny\color{mygray}, % the style that is used for the line-numbers  
+  rulecolor=\color{black},         % if not set, the frame-color may be changed on line-breaks within not-black text (e.g. comments (green here))  
+  showspaces=false,                % show spaces everywhere adding particular underscores; it overrides 'showstringspaces'  
+  showstringspaces=false,          % underline spaces within strings only  
+  showtabs=false,                  % show tabs within strings adding particular underscores  
+  stepnumber=1,                    % the step between two line-numbers. If it's 1, each line will be numbered  
+  stringstyle=\color{orange},     % string literal style  
+  tabsize=2,                       % sets default tabsize to 2 spaces  
+  %title=myPython.py                   % show the filename of files included with \lstinputlisting; also try caption instead of title  
+} 
+
+
+\floatname{algorithm}{algorithm}  
+\renewcommand{\algorithmicrequire}{\textbf{Input:}}
+\renewcommand{\algorithmicensure}{\textbf{Output:}}
+
+\usepackage{graphicx}
+
+\usepackage[english]{isodate}
+
+\title{\Huge \textbf {微分方程数值解 （第七章理论作业）} }
+\author{褚朱钇恒 - 3200104144}
+
+
+\begin{document}
+
+\maketitle
+
+\section{Exercise 7.14}
+    由$\Vert g_1 \Vert =O(h),\Vert g_N \Vert =O(h)，\Vert g_i \Vert =O(h^2)$得，
+
+    $\exists C>0,x>0$使$t<x$时，$|g_1|\le Ch,|g_N|\le Ch,|g_i|\le Ch^2$,
+
+    $\Vert g \Vert_\infty=max\{g_1,\dots,g_N\}$,故$\exists C>0,x>0$使$t<x$时（不妨设 $x<1$），有$\Vert g \Vert_\infty\le Cmax\{h,h^2\}=Ch$
+
+    所以有$\Vert g \Vert_\infty=O(h)$。
+
+    对于L1范数，
+    由$\Vert g \Vert_1=h\Sigma_{j=1}^N |g_j| \le h\Sigma_{j=2}^{N-1} |g_j|+|g_1|h+|g_N|h\le C|h^2| +C|h^2|+CN|h^3|$
+
+    所以有$\Vert g \Vert_1\le (2C+|h|N)|h^2|$，故$||g||_1=O(h^2)$
+
+    对于L2范数，由题意易得$g_1^2=O(h^2),g_N^2=O(h^2),g_i^2=O(h^4)$，同L1范数的推导可得$h\Sigma g_i^2=O(h^3)$,故$||g||_2=\sqrt[2]{h\Sigma g_i^2}=O(h^{\frac{3}{2}})$
+
+\section{Exercise 7.35}
+    设$B_E=\begin{bmatrix}
+     b_1 & b_2&\cdots&b_n   
+    \end{bmatrix}=A_E^{-1}$，则有$b_1=(\frac{1}{h^2})^{-1}\begin{bmatrix}
+        \frac{1}{h}\\
+        \frac{1}{h}\\
+        0\\
+        \cdots\\
+        0
+    \end{bmatrix}=\begin{bmatrix}
+        h\\
+        h\\
+        0\\
+        \cdots\\
+        0
+    \end{bmatrix}$
+
+    所以$||b_1||_\infty=h=O(1)$，故原命题成立。
+
+\section{Exercise 7.40}
+通过对 $u_{i,j}$ 在网格点 $(x_i, y_j)$ 处做 Taylor 展开，可以得到如下近似：
+
+$$
+u_{i-1,j}-2u_{i,j}+u_{i+1,j}=\frac{\partial^2u}{\partial x^2}+\frac{h^2\partial^4u}{12\partial x^4}+O(h^4)
+$$
+$$
+u_{i,j-1}-2u_{i,j}+u_{i,j+1}=\frac{\partial^2u}{\partial y^2}+\frac{h^2\partial^4u}{12\partial y^4}+O(h^4)
+$$
+
+代入泊松方程可得
+$$
+-\frac{1}{h^2}(u_{i-1,j}-2u_{i,j}+u_{i+1,j}+u_{i-1,j}-2u_{i,j}+u_{i+1,j})=f_{i,j}-\frac{1}{12}(\frac{h^2\partial^4u}{12\partial x^4}+\frac{h^2\partial^4u}{12\partial y^4})+O(h^4)
+$$
+
+所以有
+\begin{align*}
+    \tau_{i,j} =
+    &-\frac{h^2}{12}\left(\frac{\partial^2 f}{\partial x^2}+\frac{\partial^2 f}{\partial y^2}\right)_{(x_i,y_j)}+O(h^4)
+    \end{align*}
+
+\section{Exercise 7.60}
+根据上一题的结论，对于正则化的点，有\begin{align*}
+    \tau_{i,j} =
+    &-\frac{h^2}{12}\left(\frac{\partial^2 f}{\partial x^2}+\frac{\partial^2 f}{\partial y^2}\right)_{(x_i,y_j)}+O(h^4)
+    \end{align*}
+其中$\left(\frac{\partial^2 f}{\partial x^2}+\frac{\partial^2 f}{\partial y^2}\right)_{(x_i,y_j)}$是常数，故$\tau_{i,j}=O(h^2)$
+
+对于非正则化的点，用类似的泰勒展开方法可以得到$\tau_{i,j}$中存在$\alpha h\frac{\partial u}{\partial x}(x_i,y_j)$和$\theta h\frac{\partial u}{\partial x}(x_i,y_j)$的项，所以故$\tau_{i,j}=O(h)$.
+\section{Exercise 7.62}
+对于$\forall P\in X_1$，定义$\psi_1=E_P+\frac{T_{max}}{C_1}\phi_P$
+对于$\forall P\in X_2$，定义$\psi_2=E_P+\frac{T_{max}}{C_2}\phi_P$
+
+同Theorem 7.58理，可得$L_h\psi_1\le -T_P-T{max}=0$,$L_h\psi_2\le -T_P-T{max}=0$
+
+则有$E_P\le max_{P\in X}(E_P+max{\frac{T_1}{C_1},\frac{T_2}{C_2}}\phi_P)$
+
+故有$|E_P|\le(max_{Q\in X_{\partial \Omega \phi(Q)}})max\{\frac{T_1}{C_1},\frac{T_2}{C_2}\}$
+\end{document}
+
+
