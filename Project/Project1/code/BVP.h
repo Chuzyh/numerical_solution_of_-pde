@@ -57,7 +57,7 @@ class FD_Methods
 {
 public:
     virtual void solve() = 0;  
-    virtual double result(double x, double y){return 0.0;}  
+    virtual double operator ()(double x, double y){return 0.0;}  
     virtual double error_norm(double p){return 0;}  
 };
 
@@ -67,5 +67,60 @@ private:
     Function & f;
     double h;
     int N,cond;
+    VectorXd u;
+public:
+    FD_regular (Function & f,double h,int cond):f(f),h(h),cond(cond)
+    {
+        if(!(cond==1||cond==2||cond==3)){cerr<<"invalid condition";assert(0);}
+        N=(int)(1.0/h+1);
+    }
+    void solve()
+    {
+        if (cond==1) // Dirichlet
+        {
+            SparseMatrix<double> A(N*N,N*N);
+            vector<Triplet<double> > a;
+            MatrixXd b(N*N,1);
+            b=MatrixXd::Zero(N*N,1);
+            // 从左到右，从下到上依次从0开始标号至N*N-1
+            for(int x=0;x<N;x++)
+            for(int y=0;y<N;y++)
+            {
+                int num=x+y*N;
+                double X=x*h;
+                double Y=y*h;
 
+                if(x==0||x==N-1||y==0||y==N-1)
+                {
+                    a.push_back(Triplet<double>(num,num,1.0));
+                    b(num,0)=f(X,Y);
+                }
+                else
+                {
+                    double h2=h*h;
+                    a.push_back(Triplet<double>(num,num,4/h2));
+                    a.push_back(Triplet<double>(num,num+1,4/h2));
+                    a.push_back(Triplet<double>(num,num-1,4/h2));
+                    a.push_back(Triplet<double>(num,num+N,4/h2));
+                    a.push_back(Triplet<double>(num,num-N,4/h2));
+                    b(num,0)=f.laplace(X,Y);
+                }
+		    }
+            A.setFromTriplets(a.begin(),a.end());
+            A.makeCompressed();
+            SparseLU<SparseMatrix<double> > Solver;
+            Solver.compute(A);
+            u=Solver.solve(b);
+        }
+
+    }
+    double operator ()(double x,double y)
+    {
+        if(fabs(x/h-(int)(x/h))>EPS||fabs(y/h-(int)(y/h))>EPS)
+        {
+            cerr<<"not a grid point"<<endl;
+            assert(0);
+        }
+        return u[(int)(x/h)+((int)(y/h))*N];
+    }
 };
