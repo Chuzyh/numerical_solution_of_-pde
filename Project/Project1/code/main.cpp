@@ -14,7 +14,7 @@ class F1: public Function
 }F;
 int main()
 {
-    double h=1.0/8;
+    double h=1.0/16;
     FD_regular FD(F,h,1);
     FD.solve();
     for(int i=0;i<1.0/h;i++)

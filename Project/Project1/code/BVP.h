@@ -99,10 +99,10 @@ public:
                 {
                     double h2=h*h;
                     a.push_back(Triplet<double>(num,num,4/h2));
-                    a.push_back(Triplet<double>(num,num+1,4/h2));
-                    a.push_back(Triplet<double>(num,num-1,4/h2));
-                    a.push_back(Triplet<double>(num,num+N,4/h2));
-                    a.push_back(Triplet<double>(num,num-N,4/h2));
+                    a.push_back(Triplet<double>(num,num+1,-1/h2));
+                    a.push_back(Triplet<double>(num,num-1,-1/h2));
+                    a.push_back(Triplet<double>(num,num+N,-1/h2));
+                    a.push_back(Triplet<double>(num,num-N,-1/h2));
                     b(num,0)=f.laplace(X,Y);
                 }
 		    }
