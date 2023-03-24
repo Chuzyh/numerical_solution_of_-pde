@@ -39,6 +39,7 @@ class point
         point operator -(point a){return (point){(*this).x-a.x,(*this).y-a.y};} 
         point operator *(double a){return (point){(*this).x*a,(*this).y*a};} 
         point operator /(double a){return (point){(*this).x/a,(*this).y/a};} 
+        double len(){return sqrt((*this).x*(*this).x+(*this).y*(*this).y);}
         void out(){printf("%lf %lf ",(*this).x,(*this).y);}
 };
 class Circle
@@ -48,5 +49,23 @@ class Circle
         double radius;
     public:
         Circle (point cen,double radius):cen(cen),radius(radius){}
+        point get_center(){return (*this).cen;}
+        double get_radius(){return (*this).radius;}
+        
+};
+class FD_Methods
+{
+public:
+    virtual void solve() = 0;  
+    virtual double result(double x, double y){return 0.0;}  
+    virtual double error_norm(double p){return 0;}  
+};
+
+class FD_regular : public FD_Methods
+{
+private:
+    Function & f;
+    double h;
+    int N,cond;
 
 };
