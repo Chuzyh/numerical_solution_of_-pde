@@ -112,6 +112,51 @@ public:
             Solver.compute(A);
             u=Solver.solve(b);
         }
+        if (cond==2) // Neumann
+        {
+            SparseMatrix<double> A(N*N,N*N);
+            vector<Triplet<double> > a;
+            MatrixXd b(N*N,1);
+            b=MatrixXd::Zero(N*N,1);
+            // 从左到右，从下到上依次从0开始标号至N*N-1
+            for(int x=0;x<N;x++)
+            for(int y=0;y<N;y++)
+            {
+                int num=x+y*N;
+                double X=x*h;
+                double Y=y*h;
+
+                if(x==0&&y==0||x==0&&y==N-1||x==N-1&&y==0||x==N-1&&y==N-1)//四个角上的特殊处理一下
+                {
+                    a.push_back(Triplet<double>(num,num,1.0));
+                    b(num,0)=f(X,Y);
+                }else if(x==0||x==N-1||y==0||y==N-1)
+                {
+                    double h2=h*h;
+                    if(x==0)
+                    {
+                        a.push_back(Triplet<double>(num,num,4/h2));
+                        a.push_back(Triplet<double>(num,num-N,-1/h2));
+                        b(num,0)=f.diff_x(X,Y);
+                    }
+                }
+                else
+                {
+                    double h2=h*h;
+                    a.push_back(Triplet<double>(num,num,4/h2));
+                    a.push_back(Triplet<double>(num,num+1,-1/h2));
+                    a.push_back(Triplet<double>(num,num-1,-1/h2));
+                    a.push_back(Triplet<double>(num,num+N,-1/h2));
+                    a.push_back(Triplet<double>(num,num-N,-1/h2));
+                    b(num,0)=f.laplace(X,Y);
+                }
+		    }
+            A.setFromTriplets(a.begin(),a.end());
+            A.makeCompressed();
+            SparseLU<SparseMatrix<double> > Solver;
+            Solver.compute(A);
+            u=Solver.solve(b);
+        }
 
     }
     double operator ()(double x,double y)
