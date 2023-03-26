@@ -41,6 +41,8 @@ class point
         point operator /(double a){return (point){(*this).x/a,(*this).y/a};} 
         double len(){return sqrt((*this).x*(*this).x+(*this).y*(*this).y);}
         void out(){printf("%lf %lf ",(*this).x,(*this).y);}
+        double X(){return (*this).x;}
+        double Y(){return (*this).y;}
 };
 class Circle
 {
@@ -51,7 +53,7 @@ class Circle
         Circle (point cen,double radius):cen(cen),radius(radius){}
         point get_center(){return (*this).cen;}
         double get_radius(){return (*this).radius;}
-        
+        int in_square(){return (*this).cen.X()+(*this).radius<1&&(*this).cen.X()-(*this).radius>0&&(*this).cen.Y()-(*this).radius>0&&(*this).cen.Y()-(*this).radius>0;}
 };
 class FD_Methods
 {
@@ -71,7 +73,7 @@ private:
 public:
     FD_regular (Function & f,double h,int cond):f(f),h(h),cond(cond)
     {
-        if(!(cond==1||cond==2||cond==3)){cerr<<"invalid condition";assert(0);}
+        if(!(cond==1||cond==2||cond==3)){cerr<<"invalid condition";exit(1);}
         N=(int)(1.0/h+1);
     }
     void solve()
@@ -278,8 +280,124 @@ private:
     int N,cond,realN;
     VectorXd u;
     Circle C;
-    map<pair<double,double>,pair<int,int> > label;//first int 表示编号， second int 表示类型（1 区域内点，2 圆中的ghost point，3 正方形边界，4 圆边界）
+    map<pair<int,int>,pair<int,int> > label;//first int 表示编号， second int 表示类型（1 区域内点，2 圆中的ghost point，3 正方形边界，4 圆边界）
 
 public:
+    FD_irregular (Function & f,int cond,double h,Circle C):f(f),cond(cond),h(h),C(C)
+    {
+        if(!(cond==1||cond==2||cond==3)){cerr<<"invalid condition";exit(1);}
+        N=(int)(1.0/h+1);realN=-1;
+        if(!C.in_square()){cerr<<"circle is not in the square";exit(1);}
+        get_label();
+        label.clear();
+    }
+    void get_label()
+    {
+        for(int x=0;x<N;x++)
+            for(int y=0;y<N;y++)
+            {
+                double X=x*h;
+                double Y=y*h;
+                point now=(point){X,Y};
+                if(x==0||x==N-1||y==0||y==N-1){label[make_pair(x,y)]=make_pair(0,3);}
+                else if(fabs((C.get_center()-now).len()-C.get_radius())<EPS){label[make_pair(x,y)]=make_pair(0,4);}
+                else if((C.get_center()-now).len()>C.get_radius()){label[make_pair(x,y)]=make_pair(0,1);}
+            }
+        for(int x=0;x<N;x++)
+            for(int y=0;y<N;y++)
+            {
+                if(label.count(make_pair(x,y))==0)
+                {
+                    if(label.count(make_pair(x+1,y)))
+                    {
+                        label[make_pair(x,y)]=make_pair(0,2);
+                        continue;
+                    }
+                    if(label.count(make_pair(x-1,y)))
+                    {
+                        label[make_pair(x,y)]=make_pair(0,2);
+                        continue;
+                    }if(label.count(make_pair(x,y+1)))
+                    {
+                        label[make_pair(x,y)]=make_pair(0,2);
+                        continue;
+                    }if(label.count(make_pair(x,y-1)))
+                    {
+                        label[make_pair(x,y)]=make_pair(0,2);
+                        continue;
+                    }
+                    
+                }
+            }
+        for(map<pair<int,int>,pair<int,int> >::iterator it=label.begin();it!=label.end();it++)
+        {
+            (*it).second.first=++realN;
+        }
+    }
+    void solve()
+    {
+        if (cond==1) // Dirichlet
+        {
+            SparseMatrix<double> A(realN*realN,realN*realN);
+            vector<Triplet<double> > a;
+            MatrixXd b(realN*realN,1);
+            b=MatrixXd::Zero(realN*realN,1);
+            for(map<pair<int,int>,pair<int,int> >::iterator it=label.begin();it!=label.end();it++)
+            {
+                int num=(*it).second.first,type=(*it).second.second,x=(*it).first.first,y=(*it).first.second;
+                double X=x*h,Y=y*h,h2=h*h;
+                if(type==1)
+                {
+                    a.push_back(Triplet<double>(num,num,4/h2));
+                    
+                    a.push_back(Triplet<double>(num,label[make_pair(x-1,y)].first,-1/h2));
+                    a.push_back(Triplet<double>(num,label[make_pair(x+1,y)].first,-1/h2));
+                    a.push_back(Triplet<double>(num,label[make_pair(x,y-1)].first,-1/h2));
+                    a.push_back(Triplet<double>(num,label[make_pair(x,y-1)].first,-1/h2));
+                    b(num,0)=f.diff_x(X,Y);
+                }else if(type==2)
+                {
+                    if(label.count(make_pair(x-1,y)))
+                    {
+                        if(label[make_pair(x-1,y)].second==1)
+                        {
 
+                            continue;
+                        }
+                    }
+                    if(label.count(make_pair(x+1,y)))
+                    {
+                        if(label[make_pair(x+1,y)].second==1)
+                        {
+
+                            continue;
+                        }
+                    }
+                    if(label.count(make_pair(x,y-1)))
+                    {
+                        if(label[make_pair(x,y-1)].second==1)
+                        {
+
+                            continue;
+                        }
+                    }
+                    if(label.count(make_pair(x,y+1)))
+                    {
+                        if(label[make_pair(x,y+1)].second==1)
+                        {
+
+                            continue;
+                        }
+                    }
+                }
+            }
+
+            A.setFromTriplets(a.begin(),a.end());
+            
+            A.makeCompressed();
+            SparseLU<SparseMatrix<double> > Solver;
+            Solver.compute(A);
+            u=Solver.solve(b);
+        }
+    }
 };
