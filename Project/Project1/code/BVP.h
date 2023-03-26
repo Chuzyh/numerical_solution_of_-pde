@@ -270,3 +270,16 @@ public:
         }
     }
 };
+class FD_irregular : public FD_Methods
+{
+private:
+    Function & f;
+    double h;
+    int N,cond,realN;
+    VectorXd u;
+    Circle C;
+    map<pair<double,double>,pair<int,int> > label;//first int 表示编号， second int 表示类型（1 区域内点，2 圆中的ghost point，3 正方形边界，4 圆边界）
+
+public:
+
+};
