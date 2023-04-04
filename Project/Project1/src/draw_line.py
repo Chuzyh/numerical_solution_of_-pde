@@ -4,7 +4,7 @@ from mpl_toolkits.mplot3d import Axes3D
 plt.switch_backend('agg')
 
 
-h=[8,16,32,64,128]
+h=[8,16,32,64,128,256,512]
 
 for fun in range(1,4):
     with open('../data/fun'+str(fun)+'_regu_points') as f:
