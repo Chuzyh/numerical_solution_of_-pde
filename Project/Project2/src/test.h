@@ -1,4 +1,4 @@
-class F1: public Function
+class F1: public Function2d
 {
     public:
     double operator()(const double &x,const double &y)const{return exp(y+sin(x));}
@@ -8,7 +8,7 @@ class F1: public Function
     double diff2_y(const double &x,const double &y)const{return exp(y+sin(x));}
 }Fun;
 
-class F2: public Function
+class F2: public Function2d
 {
     public:
     double operator()(const double &x,const double &y)const{return sin(x*3+y*3);}
@@ -17,7 +17,7 @@ class F2: public Function
     double diff2_x(const double &x,const double &y)const{return -9*sin(x*3+y*3);}
     double diff2_y(const double &x,const double &y)const{return -9*sin(x*3+y*3);}
 }Fun2;
-class F3: public Function
+class F3: public Function2d
 {
     public:
     double operator()(const double &x,const double &y)const{return exp(x*x+y*y*y);}
