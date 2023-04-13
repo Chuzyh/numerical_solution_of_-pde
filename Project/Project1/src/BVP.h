@@ -558,6 +558,7 @@ public:
         if(p<0)
         {
             for(map<pair<int,int>,pair<int,int> >::iterator it=label.begin();it!=label.end();it++)
+            if((*it).second.second!=2)
             {
                 int x=(*it).first.first;
                 int y=(*it).first.second;
@@ -568,6 +569,7 @@ public:
         }else
         {
             for(map<pair<int,int>,pair<int,int> >::iterator it=label.begin();it!=label.end();it++)
+            if((*it).second.second!=2)
             {
                 int x=(*it).first.first;
                 int y=(*it).first.second;
