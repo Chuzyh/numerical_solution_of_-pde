@@ -22,7 +22,7 @@ class Function
         }
         virtual double laplace(const double &x) 
         const{
-            return ((*this).diff(x+EPS)-(*this).diff(x-EPS))/(EPS*2);
+            return -((*this).diff(x+EPS)-(*this).diff(x-EPS))/(EPS*2);
         }
 };
 class Function2d
