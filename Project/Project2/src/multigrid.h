@@ -5,6 +5,21 @@ enum restriction_operators {full_weighting,injection} ;
 enum interpolation_operators {linear,quadratic};
 enum cycles {V_cycle,FMG};
 enum stopping_criteria{max_iteration,rela_accuracy};
+
+vector<double> operator -(vector<double> a,vector<double> b)
+{
+    if(a.size()!=b.size()){cerr<<"wrong size"<<endl;exit(-1);}
+    vector<double> re;re.resize(a.size());
+    for(int i=0;i<(int)a.size();i++)re[i]=a[i]-b[i];
+    return re;
+}
+vector<double> operator +(vector<double> a,vector<double> b)
+{
+    if(a.size()!=b.size()){cerr<<"wrong size"<<endl;exit(-1);}
+    vector<double> re;re.resize(a.size());
+    for(int i=0;i<(int)a.size();i++)re[i]=a[i]+b[i];
+    return re;
+}
 template <int dim>
 class Multigrid_Method
 {
@@ -74,21 +89,22 @@ class Multigrid_Method<1>
             re.push_back(I[(int)I.size()-1]);
             return re;
         }
-        void jacobi()
+        vector<double> jacobi(vector<double> u,vector<double> F)
         {
             vector<double> oldu(u);
+            double omega=2.0/3;
             //I[-1]=I[0]-(I[1]-I[0])
             if(BC==Dirichlet)
             {
-                oldu[0]=u[0]=f(0);
-                oldu[u.size()-1]=u[u.size()-1]=f(1);
+                oldu[0]=u[0]=F[0];
+                oldu[u.size()-1]=u[u.size()-1]=F[u.size()-1];
                 
-                for(int i=1;i<(int)u.size()-1;i++)u[i]=h*h/2*(f.laplace(h*i))+(oldu[i-1]+oldu[i+1])/2;//u[i]=-((oldu[i]*2-oldu[i-1]-oldu[i+1])-f.laplace(h*i)*h*h/2);
+                for(int i=1;i<(int)u.size()-1;i++)u[i]=(oldu[i-1]+oldu[i+1])*omega/2+(1.0-omega)*oldu[i]+omega*h*h/2*F[i];
             }else
             {
                 {cerr<<"Neumann not finished"<<endl;exit(-1);}
             }
-            for(int i=1;i<(int)u.size()-1;i++)u[i]=u[i]*1/3+oldu[i]*2/3;
+            return u;
         }
         double accuracy()
         {
@@ -116,18 +132,41 @@ class Multigrid_Method<1>
                 printf("%lf ",f(h*i));
             puts("");
         }
-        void Vcycle(int v1,int v2)
+        void solve(int v1,int v2)
+        {
+            iter_time=0;
+            vector<double> F;F.clear();
+            for(int i=0;i<(int)u.size();i++)F.push_back(f.laplace(h*i));
+            F[0]=f(0),F[u.size()-1]=f(1);
+            u=Vcycle(v1,v2,u,F);
+        }
+        vector<double> laplace(vector<double> u)
+        {
+            vector<double> re;re.resize(u.size());
+            re[0]=u[0];re[u.size()-1]=u[u.size()-1];
+            for(int i=1;i<(int)u.size()-1;i++)re[i]=u[i]*2/h/h-(u[i-1]+u[i+1])/h/h;
+            return re;
+        }
+        vector<double> Vcycle(int v1,int v2,vector<double> u,vector<double> F)
         {   
             for(int i=1;i<=v1;i++)
-                jacobi();
+            {
+                u=jacobi(u,F);
+            }
+                
             if(!can_stop())
             {
+                vector<double> u2;u2.resize(u.size()/2+1);
+                for(int i=0;i<u2.size();i++)u2[i]=0;
+                vector<double> F2=F;
+                
+                F2=restriction(F-laplace(u));iter_time++;
                 h=h*2;
-                u=restriction(u);iter_time++;
-                Vcycle(v1,v2);
-                u=interpolation(u);
+                u2=Vcycle(v1,v2,u2,F2);
+                u2=interpolation(u2);
+                u=u+u2;//u[0]=f(0);u[u.size()-1]=f(1);
                 h/=2;
-            }else
+            }/*else
             {
                 int M=u.size();
                 SparseMatrix<double> A(M,M);
@@ -153,14 +192,14 @@ class Multigrid_Method<1>
                 Solver.compute(A);
                 VectorXd X=Solver.solve(b);
                 for(int i=0;i<M;i++)u[i]=X(i);
-            }
-            for(int i=1;i<=v2;i++)jacobi();
-            
+            }*/
+            for(int i=1;i<=v2;i++)u=jacobi(u,F);
+            return u;
         }
         double error_norm(double p)
         {
             double re=0;
-            for(int i=0;i<u.size()-1;i++)re+=h*pow(fabs(u[i]-f(h*i)),p);
+            for(int i=0;i<u.size();i++)re+=h*pow(fabs(u[i]-f(h*i)),p);
             return pow(re,1.0/p);
         }
         

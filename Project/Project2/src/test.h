@@ -30,7 +30,14 @@ class F3: public Function2d
 class F4: public Function
 {
     public:
-    double operator()(const double &x)const{return exp(x);}
-    double diff(const double &x)const{return exp(x);}
-    double laplace(const double &x)const{return -exp(x);}
+    double operator()(const double &x)const{return x;}
+    double diff(const double &x)const{return 1;}
+    double laplace(const double &x)const{return  0;}
 }Fun4;
+class F5: public Function
+{
+    public:
+    double operator()(const double &x)const{return exp(sin(x))-1;}
+    double diff(const double &x)const{return exp(sin(x))*cos(x);}
+    double laplace(const double &x)const{return  exp(sin(x))*sin(x)-exp(sin(x))*cos(x)*cos(x);}
+}Fun5;
