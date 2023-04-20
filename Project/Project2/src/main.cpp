@@ -6,22 +6,24 @@ using namespace std;
 
 int main()
 {
-    int N=64;
+    int N=128  ;
     double h=1.0/N;
     vector<double> init;init.resize(N+1);
-    Multigrid_Method<1> test(Fun5,bound_conditon(Dirichlet),restriction_operators(injection),interpolation_operators(linear),cycles(V_cycle),stopping_criteria(max_iteration),h,init,2.0);
+    Multigrid_Method<1> test(Fun5,bound_conditon(Neumann),restriction_operators(injection),interpolation_operators(linear),cycles(V_cycle),stopping_criteria(max_iteration),h,init,25.0);
+    Multigrid_Method<1> test2(Fun5,bound_conditon(Neumann),restriction_operators(injection),interpolation_operators(linear),cycles(FMG),stopping_criteria(max_iteration),h,init,25.0);
     double la;
-    for(int i=1;i<=1000;i++)
+    test2.solve(10,10);
+    for(int i=1;i<=30;i++)
     {
 
     test.solve(2,2);
-    cout<<test.error_norm(1)<<' '<<la/test.error_norm(1)<<endl;
+    // cout<<test.error_norm(1)<<' '<<la/test.error_norm(1)<<endl;
     
-    la=test.error_norm(1);
+    // la=test.error_norm(1);
     // test.out();
     // test.out();
     }
     
-    // test.out();
+    cout<<test.error_norm(1)<<' '<<test2.error_norm(1)<<' ' <<test.error_norm(1)/test2.error_norm(1)<<endl;
     return 0;
 }
