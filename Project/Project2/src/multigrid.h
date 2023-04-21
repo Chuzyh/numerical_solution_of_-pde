@@ -42,16 +42,16 @@ class Multigrid_Method<1>
         interpolation_operators IO;
         cycles CY;
         stopping_criteria SC;
-        int mn_N;double esplion;
+        int mn_N;double st_parm;
         double h,ori_h;
         int N;
         Function & f;
         vector<double> u;
     public:
-        Multigrid_Method (Function &f,bound_conditon BC,restriction_operators RO,interpolation_operators IO,cycles CY,stopping_criteria SC,double h,vector<double> u,double st_parm):f(f),BC(BC),RO(RO),IO(IO),CY(CY),SC(SC),h(h),u(u)
+        Multigrid_Method (Function &f,bound_conditon BC,restriction_operators RO,interpolation_operators IO,cycles CY,stopping_criteria SC,double h,vector<double> u,double st_parm,int mn_n):f(f),BC(BC),RO(RO),IO(IO),CY(CY),SC(SC),h(h),u(u),st_parm(st_parm),mn_N(mn_n)
         {
-            cerr<<"init"<<endl;
-            N=(int)(1.0/h+1);ori_h=h;if(SC==max_iteration)mn_N=max((int)(1.0/h/pow(2.0,st_parm)+1),3);else esplion=st_parm;
+            
+            N=(int)(1.0/h+1);ori_h=h;mn_N=max(3,mn_N);
             if(u.size()!=N){cerr<<"wrong size of initial guess"<<endl;exit(-1);}
         }
         vector<double> restriction(vector<double> I)
@@ -65,7 +65,10 @@ class Multigrid_Method<1>
             }
             else
             {
-                for(int i=2;i<(int)I.size()-1;i+=2)re.push_back((I[i]*2+I[i-1]+I[i+1])/4);
+                for(int i=2;i<(int)I.size()-1;i+=2)
+                {
+                    if(BC==Neumann&&i==I.size()/2)re.push_back(I[i]);else re.push_back((I[i]*2+I[i-1]+I[i+1])/4);
+                }
             } 
             re.push_back(I[(int)I.size()-1]);
             return re;
@@ -111,6 +114,13 @@ class Multigrid_Method<1>
                 u[0]=F[0];
                 u[u.size()-1]=F[u.size()-1];
                 for(int i=1;i<(int)u.size()-1;i++)u[i]=(oldu[i-1]+oldu[i+1])*omega/2+(1.0-omega)*oldu[i]+omega*h*h/2*F[i];
+            }else if(BC==Neumann)
+            {
+                u[0]=(-F[0]*h/1.5+2.0/1.5*oldu[1]-1.0/3*oldu[2])*omega+oldu[0]*(1-omega);
+                u[u.size()-1]=(F[u.size()-1]*h/1.5+2.0/1.5*oldu[u.size()-2]-1.0/3*oldu[u.size()-3])*omega+oldu[u.size()-1]*(1-omega);
+                
+                for(int i=1;i<(int)u.size()-1;i++)u[i]=(oldu[i-1]+oldu[i+1])*omega/2+(1.0-omega)*oldu[i]+omega*h*h/2*F[i];
+                u[u.size()/2]=F[u.size()/2];
             }else 
             {
                 u[0]=(-F[0]*h/1.5+2.0/1.5*oldu[1]-1.0/3*oldu[2])*omega+oldu[0]*(1-omega);
@@ -124,17 +134,9 @@ class Multigrid_Method<1>
             double re=0;
             for(int i=1;i<(int)u.size()-1;i++)
             {
-                re+=fabs(f(h*i)-u[i]);
+                re+=fabs((f(h*i)-u[i])/f(h*i));
             }
             return re*h;
-        }
-        int can_stop(vector<double> u)
-        {
-            if(SC==max_iteration)return u.size()<=mn_N;
-            else 
-            {
-                return accuracy(u)<esplion;
-            }
         }
         void out()
         {
@@ -149,16 +151,30 @@ class Multigrid_Method<1>
         {
             vector<double> F;F.clear();
             for(int i=0;i<(int)u.size();i++)F.push_back(f.laplace(h*i));
+
             if(BC==Dirichlet)F[0]=f(0),F[u.size()-1]=f(1);
+            else if(BC==Neumann)F[0]=f.diff(0),F[u.size()-1]=f.diff(1),F[u.size()/2]=f(0.5);
             else F[0]=f.diff(0),F[u.size()-1]=f(1);
-            if(CY==V_cycle)u=Vcycle(v1,v2,u,F);else u=FMG(v1,v2,F);
+
+            if(SC==rela_accuracy)
+            {
+                for(int i=1;i<=100&&(residual_norm(1)>st_parm);i++,cout<<i<<' '<<residual_norm(1)<<endl)
+                    if(CY==V_cycle)u=Vcycle(v1,v2,u,F);else u=FMG(v1,v2,F);
+            }else
+            {
+                for(int i=1;i<=st_parm;i++)
+                    if(CY==V_cycle)u=Vcycle(v1,v2,u,F);else u=FMG(v1,v2,F);
+            }
+            
         }
         vector<double> laplace(vector<double> u)
         {
             vector<double> re;re.resize(u.size());
-            if(BC==Dirichlet)re[0]=u[0],re[u.size()-1]=u[u.size()-1];
-            else re[0]=-1.5*u[0]/h+2.0*u[1]/h-0.5*u[2]/h,re[u.size()-1]=u[u.size()-1];
+            
             for(int i=1;i<(int)u.size()-1;i++)re[i]=u[i]*2/h/h-(u[i-1]+u[i+1])/h/h;
+            if(BC==Dirichlet)re[0]=u[0],re[u.size()-1]=u[u.size()-1];
+            else if(BC==Neumann)re[0]=-1.5*u[0]/h+2.0*u[1]/h-0.5*u[2]/h,re[u.size()-1]=1.5*u[u.size()-1]/h-2.0*u[u.size()-2]/h+0.5*u[u.size()-3]/h,re[u.size()/2]=u[u.size()/2];
+            else re[0]=-1.5*u[0]/h+2.0*u[1]/h-0.5*u[2]/h,re[u.size()-1]=u[u.size()-1];
             return re;
         }
         vector<double> Vcycle(int v1,int v2,vector<double> u,vector<double> F)
@@ -168,7 +184,7 @@ class Multigrid_Method<1>
                 u=jacobi(u,F);
             }
                 
-            if(!can_stop(u))
+            if(u.size()>mn_N)
             {
                 vector<double> u2;u2.resize(u.size()/2+1);
                 for(int i=0;i<u2.size();i++)u2[i]=0;
@@ -186,7 +202,7 @@ class Multigrid_Method<1>
         }
         vector<double> FMG(int v1,int v2,vector<double> F)
         {   
-            if(!can_stop(u))
+            if(u.size()>mn_N)
             {
                 vector<double> F2=F;
                 
@@ -204,9 +220,21 @@ class Multigrid_Method<1>
         double error_norm(double p)
         {
             double re=0;
-            double ave=0;
-            for(int i=0;i<u.size();i++)ave+=f(h*i);ave/=u.size();
+            
             for(int i=0;i<u.size();i++)re+=h*pow(fabs(u[i]-f(h*i)),p);
+            return pow(re,1.0/p);
+        }
+        double residual_norm(double p)
+        {
+            double re=0;
+            vector<double> F;F.clear();
+            for(int i=0;i<(int)u.size();i++)F.push_back(f.laplace(h*i));
+            if(BC==Dirichlet)F[0]=f(0),F[u.size()-1]=f(1);else
+            if(BC==Neumann)F[0]=f.diff(0),F[u.size()-1]=f.diff(1),F[u.size()/2]=f(0.5);
+            else F[0]=f.diff(0),F[u.size()-1]=f(1);
+
+            vector<double> res=F-laplace(u);
+            for(int i=0;i<u.size();i++)re+=h*pow(fabs(res[i]),p);
             return pow(re,1.0/p);
         }
         
