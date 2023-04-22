@@ -1,6 +1,9 @@
 {
     "n": [32, 64, 128, 256],
     "condition": ["Dirichlet","Neumann","mixed"],
+    "restriction_operators": ["full_weighting","injection"],
+    "interpolation_operators": ["linear","quadratic"],
+    "cycles": ["V_cycle","FMG"],
     "esplion":1e-8
 }
 
