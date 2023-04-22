@@ -369,6 +369,7 @@ class Multigrid_Method<2>
 
                 }
                 re[0][u.size()/2]=u[0][u.size()/2];
+                re[u.size()-1][u.size()/2]=u[u.size()-1][u.size()/2];
             }else 
             {
                 for(int i=1;i<(int)u.size()-1;i++)
@@ -455,7 +456,7 @@ class Multigrid_Method<2>
                     }
                 
             } 
-            if(BC==Neumann)re[re.size()/2][re.size()/2]=I[re.size()][re.size()];
+            if(BC==Neumann)re[0][re.size()/2]=I[0][re.size()-1],re[re.size()-1][re.size()/2]=I[I.size()-1][re.size()-1];
             return re;
         }
         int in_grid(int grid_N,int x,int y)
@@ -483,8 +484,8 @@ class Multigrid_Method<2>
                 for(int i=0;i<grid_N;i++)
                     for(int j=0;j<grid_N;j++)
                     {
-                        if(i==grid_N/2&&j==grid_N/2)continue;
                         re[i*2][j*2]+=I[i][j];
+                        if(i==0&&j==grid_N/2||i==grid_N-1&&j==grid_N/2)continue;
                         for(int k=0;k<4;k++)
                         if(in_grid(re.size(),i*2+dir[k][0],j*2+dir[k][1]))
                             re[i*2+dir[k][0]][j*2+dir[k][1]]+=I[i][j]*0.5; 
@@ -492,7 +493,24 @@ class Multigrid_Method<2>
                         if(in_grid(re.size(),i*2+dir[k][0],j*2+dir[k][1]))
                             re[i*2+dir[k][0]][j*2+dir[k][1]]+=I[i][j]*0.25;
                         
+                        
                     }
+                int i=0,j=grid_N/2;
+                for(int k=0;k<4;k++)
+                if(in_grid(re.size(),i*2+dir[k][0],j*2+dir[k][1]))
+                    re[i*2+dir[k][0]][j*2+dir[k][1]]+=(I[i][j-1]+I[i][j+1])/2*0.5; 
+                for(int k=4;k<8;k++)
+                if(in_grid(re.size(),i*2+dir[k][0],j*2+dir[k][1]))
+                    re[i*2+dir[k][0]][j*2+dir[k][1]]+=(I[i][j-1]+I[i][j+1])/2*0.25;
+
+                i=grid_N-1,j=grid_N/2;
+                for(int k=0;k<4;k++)
+                if(in_grid(re.size(),i*2+dir[k][0],j*2+dir[k][1]))
+                    re[i*2+dir[k][0]][j*2+dir[k][1]]+=(I[i][j-1]+I[i][j+1])/2*0.5; 
+                for(int k=4;k<8;k++)
+                if(in_grid(re.size(),i*2+dir[k][0],j*2+dir[k][1]))
+                    re[i*2+dir[k][0]][j*2+dir[k][1]]+=(I[i][j-1]+I[i][j+1])/2*0.25;
+                        
             }
             else
             {
@@ -566,7 +584,7 @@ class Multigrid_Method<2>
             for(int i=1;i<(int)u.size()-1;i++)
                     for(int j=1;j<(int)u.size()-1;j++)
                         u[i][j]=(oldu[i-1][j]+oldu[i+1][j]+oldu[i][j-1]+oldu[i][j+1])*omega/4+(1.0-omega)*oldu[i][j]+omega*h*h/4*F[i][j];
-            if(BC==Neumann)u[0][u.size()/2]=F[0][u.size()/2];
+            if(BC==Neumann)u[0][u.size()/2]=F[0][u.size()/2],u[u.size()-1][u.size()/2]=F[u.size()-1][u.size()/2];
             return u;
         }
     public:
@@ -626,7 +644,6 @@ class Multigrid_Method<2>
            else if(BC==Neumann)
            {
 
-                F[0][u.size()/2]=f(0,0.5);
                 for(int i=1;i<(int)u.size()-1;i++)
                 {
                     F[0][i]=f.diff_x(0,h*i);
@@ -634,7 +651,9 @@ class Multigrid_Method<2>
                     F[i][0]=f.diff_y(h*i,0);
                     F[i][u.size()-1]=f.diff_y(h*i,1);
                 }
-
+                
+                F[0][u.size()/2]=f(0,0.5);
+                F[u.size()-1][u.size()/2]=f(1,0.5);
                 v1*=10,v2*=10;
             }else 
             {
@@ -651,12 +670,13 @@ class Multigrid_Method<2>
             
             if(SC==rela_accuracy)
             {
-                for(int i=1;i<=20&&(residual_norm(1)>st_parm);i++)
+                for(int i=1;(residual_norm(1)>st_parm);i++)
                 {
                     if(CY==V_cycle)u=Vcycle(v1,v2,u,F);else u=FMG(v1,v2,F);
                     double now_error=error_norm(1);
                     double now_resi=residual_norm(1);
                     if(show_detail)printf(" %d & %.3e & %.3lf & %.3e & %.3lf\\\\ \\hline \n",i,now_error,la_error/now_error,now_resi,la_resi/now_resi);
+                    if(la_error/now_error<1.01)break;
                     la_error=now_error;la_resi=now_resi;
                 }
                     
@@ -705,6 +725,7 @@ class Multigrid_Method<2>
                     F[i][u.size()-1]=f.diff_y(h*i,1);
                 }
                 F[0][u.size()/2]=f(0,0.5);
+                F[u.size()-1][u.size()/2]=f(1,0.5);
             }else 
             {
                 for(int i=1;i<(int)u.size()-1;i++)
