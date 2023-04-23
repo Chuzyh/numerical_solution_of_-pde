@@ -90,8 +90,8 @@ private:
     interpolation_operators IO;
     cycles CY;
     stopping_criteria SC;
-    int max_iter;double esplion;
-    double h;
+    int mn_N;double st_parm;
+    double h,ori_h;
     int N;
 };
 template<>
@@ -147,11 +147,11 @@ class Multigrid_Method<1>
             {
                 vector<double> F2=F;
                 
-                F2=restriction(F-laplace(u));
+                F2=restriction(F);
                 h=h*2;
                 vector<double> U(u);
                 u=restriction(u);
-                u=interpolation(FMG(v1,v2,F2))+U;
+                u=interpolation(FMG(v1,v2,F2));
                 h/=2;
                 
             }
@@ -418,11 +418,11 @@ class Multigrid_Method<2>
             {
                 vector<vector<double> > F2=F;
                 
-                F2=restriction(F-laplace(u));
+                F2=restriction(F);
                 h=h*2;
                 vector<vector<double> > U(u);
                 u=restriction(u);
-                u=interpolation(FMG(v1,v2,F2))+U;
+                u=interpolation(FMG(v1,v2,F2));
                 h/=2;
                 
             }

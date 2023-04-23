@@ -194,7 +194,7 @@ int main()
     test_cycle(Fun7,3,"test.json");
 
 
-    test_fun2d(Fun,1,"test2.json");
+    /*test_fun2d(Fun,1,"test2.json");
     test_fun2d(Fun2,2,"test2.json");
     test_fun2d(Fun3,3,"test2.json");
     test_cycle2d(Fun,1,"test2.json");
@@ -203,22 +203,6 @@ int main()
     
     test_time2d(Fun,1,"test2.json");
     test_time2d(Fun2,2,"test2.json");
-    test_time2d(Fun3,3,"test2.json");
-    // test_fun2d(Fun,1);
-    // test_cycle2d(Fun,1);
-    /*int N=32*2*2*2  ;
-    double h=1.0/N;
-    vector<vector<double> > init;init.resize(N+1);
-    for(int i=0;i<=N;i++)init[i].resize(N+1);
-
-    Multigrid_Method<2> test(Fun,bound_conditon(Neumann),restriction_operators(full_weighting),interpolation_operators(linear),cycles(V_cycle),stopping_criteria(rela_accuracy),h,init,1e-8,3);
-    Multigrid_Method<2> test2(Fun,bound_conditon(Neumann),restriction_operators(full_weighting),interpolation_operators(linear),cycles(FMG),stopping_criteria(rela_accuracy),h,init,1e-8,3);
-    double la;
-    test.solve(5,5,1);
-    test2.solve(5,5,1);
-    
-    
-    cout<<test.error_norm(1)<<' '<<test2.error_norm(1)<<' ' <<test.error_norm(1)/test2.error_norm(1)<<endl;
-    cout<<test.residual_norm(1)<<' '<<test2.residual_norm(1)<<' ' <<test.residual_norm(1)/test2.residual_norm(1)<<endl;*/
+    test_time2d(Fun3,3,"test2.json");*/
     return 0;
 }

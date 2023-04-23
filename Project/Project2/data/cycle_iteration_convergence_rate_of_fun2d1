@@ -1,0 +1,192 @@
+32  Dirichlet full_weighting linear V_cycle
+ 1 & 1.888e-01 & 0.000 & 1.603e+01 & 0.000\\ \hline 
+64  Dirichlet full_weighting linear V_cycle
+ 1 & 1.988e-01 & 0.000 & 3.263e+01 & 0.000\\ \hline 
+128  Dirichlet full_weighting linear V_cycle
+ 1 & 2.047e-01 & 0.000 & 6.565e+01 & 0.000\\ \hline 
+256  Dirichlet full_weighting linear V_cycle
+ 1 & 2.087e-01 & 0.000 & 1.315e+02 & 0.000\\ \hline 
+32  Dirichlet full_weighting linear FMG
+ 1 & 2.901e-04 & 0.000 & 1.113e-02 & 0.000\\ \hline 
+64  Dirichlet full_weighting linear FMG
+ 1 & 2.522e-04 & 0.000 & 8.701e-03 & 0.000\\ \hline 
+128  Dirichlet full_weighting linear FMG
+ 1 & 2.423e-04 & 0.000 & 7.614e-03 & 0.000\\ \hline 
+256  Dirichlet full_weighting linear FMG
+ 1 & 2.398e-04 & 0.000 & 7.113e-03 & 0.000\\ \hline 
+32  Dirichlet full_weighting quadratic V_cycle
+ 1 & 5.260e-02 & 0.000 & 9.381e+00 & 0.000\\ \hline 
+64  Dirichlet full_weighting quadratic V_cycle
+ 1 & 5.855e-02 & 0.000 & 2.084e+01 & 0.000\\ \hline 
+128  Dirichlet full_weighting quadratic V_cycle
+ 1 & 6.118e-02 & 0.000 & 4.362e+01 & 0.000\\ \hline 
+256  Dirichlet full_weighting quadratic V_cycle
+ 1 & 6.187e-02 & 0.000 & 8.896e+01 & 0.000\\ \hline 
+32  Dirichlet full_weighting quadratic FMG
+ 1 & 1.217e-05 & 0.000 & 4.679e-04 & 0.000\\ \hline 
+64  Dirichlet full_weighting quadratic FMG
+ 1 & 2.410e-06 & 0.000 & 1.514e-04 & 0.000\\ \hline 
+128  Dirichlet full_weighting quadratic FMG
+ 1 & 5.119e-07 & 0.000 & 5.236e-05 & 0.000\\ \hline 
+256  Dirichlet full_weighting quadratic FMG
+ 1 & 2.101e-07 & 0.000 & 1.996e-05 & 0.000\\ \hline 
+32  Dirichlet injection linear V_cycle
+ 1 & 1.253e-01 & 0.000 & 1.203e+01 & 0.000\\ \hline 
+64  Dirichlet injection linear V_cycle
+ 1 & 1.344e-01 & 0.000 & 2.484e+01 & 0.000\\ \hline 
+128  Dirichlet injection linear V_cycle
+ 1 & 1.417e-01 & 0.000 & 5.017e+01 & 0.000\\ \hline 
+256  Dirichlet injection linear V_cycle
+ 1 & 1.483e-01 & 0.000 & 1.004e+02 & 0.000\\ \hline 
+32  Dirichlet injection linear FMG
+ 1 & 4.879e-04 & 0.000 & 1.483e-02 & 0.000\\ \hline 
+64  Dirichlet injection linear FMG
+ 1 & 4.796e-04 & 0.000 & 1.388e-02 & 0.000\\ \hline 
+128  Dirichlet injection linear FMG
+ 1 & 4.775e-04 & 0.000 & 1.352e-02 & 0.000\\ \hline 
+256  Dirichlet injection linear FMG
+ 1 & 4.770e-04 & 0.000 & 1.338e-02 & 0.000\\ \hline 
+32  Dirichlet injection quadratic V_cycle
+ 1 & 1.322e-01 & 0.000 & 1.390e+01 & 0.000\\ \hline 
+64  Dirichlet injection quadratic V_cycle
+ 1 & 1.390e-01 & 0.000 & 3.079e+01 & 0.000\\ \hline 
+128  Dirichlet injection quadratic V_cycle
+ 1 & 1.396e-01 & 0.000 & 6.470e+01 & 0.000\\ \hline 
+256  Dirichlet injection quadratic V_cycle
+ 1 & 1.366e-01 & 0.000 & 1.325e+02 & 0.000\\ \hline 
+32  Dirichlet injection quadratic FMG
+ 1 & 8.502e-06 & 0.000 & 5.536e-04 & 0.000\\ \hline 
+64  Dirichlet injection quadratic FMG
+ 1 & 1.780e-06 & 0.000 & 1.977e-04 & 0.000\\ \hline 
+128  Dirichlet injection quadratic FMG
+ 1 & 8.123e-07 & 0.000 & 7.644e-05 & 0.000\\ \hline 
+256  Dirichlet injection quadratic FMG
+ 1 & 4.876e-07 & 0.000 & 3.221e-05 & 0.000\\ \hline 
+32  Neumann full_weighting linear V_cycle
+ 1 & 1.383e+00 & 0.000 & 1.381e+00 & 0.000\\ \hline 
+64  Neumann full_weighting linear V_cycle
+ 1 & 1.617e+00 & 0.000 & 1.633e+00 & 0.000\\ \hline 
+128  Neumann full_weighting linear V_cycle
+ 1 & 1.822e+00 & 0.000 & 1.869e+00 & 0.000\\ \hline 
+256  Neumann full_weighting linear V_cycle
+ 1 & 2.001e+00 & 0.000 & 2.075e+00 & 0.000\\ \hline 
+32  Neumann full_weighting linear FMG
+ 1 & 1.049e-01 & 0.000 & 8.348e-02 & 0.000\\ \hline 
+64  Neumann full_weighting linear FMG
+ 1 & 1.054e-01 & 0.000 & 7.660e-02 & 0.000\\ \hline 
+128  Neumann full_weighting linear FMG
+ 1 & 1.099e-01 & 0.000 & 7.986e-02 & 0.000\\ \hline 
+256  Neumann full_weighting linear FMG
+ 1 & 1.162e-01 & 0.000 & 8.354e-02 & 0.000\\ \hline 
+32  Neumann full_weighting quadratic V_cycle
+ 1 & 1.360e+00 & 0.000 & 1.448e+00 & 0.000\\ \hline 
+64  Neumann full_weighting quadratic V_cycle
+ 1 & 1.598e+00 & 0.000 & 1.682e+00 & 0.000\\ \hline 
+128  Neumann full_weighting quadratic V_cycle
+ 1 & 1.806e+00 & 0.000 & 1.894e+00 & 0.000\\ \hline 
+256  Neumann full_weighting quadratic V_cycle
+ 1 & 1.987e+00 & 0.000 & 2.089e+00 & 0.000\\ \hline 
+32  Neumann full_weighting quadratic FMG
+ 1 & 6.069e-02 & 0.000 & 5.066e-02 & 0.000\\ \hline 
+64  Neumann full_weighting quadratic FMG
+ 1 & 6.180e-02 & 0.000 & 4.885e-02 & 0.000\\ \hline 
+128  Neumann full_weighting quadratic FMG
+ 1 & 6.490e-02 & 0.000 & 5.189e-02 & 0.000\\ \hline 
+256  Neumann full_weighting quadratic FMG
+ 1 & 6.895e-02 & 0.000 & 5.441e-02 & 0.000\\ \hline 
+32  Neumann injection linear V_cycle
+ 1 & 1.383e+00 & 0.000 & 1.382e+00 & 0.000\\ \hline 
+64  Neumann injection linear V_cycle
+ 1 & 1.620e+00 & 0.000 & 1.633e+00 & 0.000\\ \hline 
+128  Neumann injection linear V_cycle
+ 1 & 1.826e+00 & 0.000 & 1.863e+00 & 0.000\\ \hline 
+256  Neumann injection linear V_cycle
+ 1 & 2.007e+00 & 0.000 & 2.069e+00 & 0.000\\ \hline 
+32  Neumann injection linear FMG
+ 1 & 1.086e-01 & 0.000 & 8.742e-02 & 0.000\\ \hline 
+64  Neumann injection linear FMG
+ 1 & 1.095e-01 & 0.000 & 8.073e-02 & 0.000\\ \hline 
+128  Neumann injection linear FMG
+ 1 & 1.144e-01 & 0.000 & 8.447e-02 & 0.000\\ \hline 
+256  Neumann injection linear FMG
+ 1 & 1.211e-01 & 0.000 & 8.823e-02 & 0.000\\ \hline 
+32  Neumann injection quadratic V_cycle
+ 1 & 1.361e+00 & 0.000 & 1.449e+00 & 0.000\\ \hline 
+64  Neumann injection quadratic V_cycle
+ 1 & 1.601e+00 & 0.000 & 1.684e+00 & 0.000\\ \hline 
+128  Neumann injection quadratic V_cycle
+ 1 & 1.810e+00 & 0.000 & 1.889e+00 & 0.000\\ \hline 
+256  Neumann injection quadratic V_cycle
+ 1 & 1.993e+00 & 0.000 & 2.083e+00 & 0.000\\ \hline 
+32  Neumann injection quadratic FMG
+ 1 & 6.316e-02 & 0.000 & 5.322e-02 & 0.000\\ \hline 
+64  Neumann injection quadratic FMG
+ 1 & 6.448e-02 & 0.000 & 5.150e-02 & 0.000\\ \hline 
+128  Neumann injection quadratic FMG
+ 1 & 6.777e-02 & 0.000 & 5.477e-02 & 0.000\\ \hline 
+256  Neumann injection quadratic FMG
+ 1 & 7.202e-02 & 0.000 & 5.734e-02 & 0.000\\ \hline 
+32  mixed full_weighting linear V_cycle
+ 1 & 2.807e-01 & 0.000 & 9.700e+00 & 0.000\\ \hline 
+64  mixed full_weighting linear V_cycle
+ 1 & 3.062e-01 & 0.000 & 1.817e+01 & 0.000\\ \hline 
+128  mixed full_weighting linear V_cycle
+ 1 & 3.296e-01 & 0.000 & 3.455e+01 & 0.000\\ \hline 
+256  mixed full_weighting linear V_cycle
+ 1 & 3.504e-01 & 0.000 & 6.675e+01 & 0.000\\ \hline 
+32  mixed full_weighting linear FMG
+ 1 & 4.490e-02 & 0.000 & 1.053e+00 & 0.000\\ \hline 
+64  mixed full_weighting linear FMG
+ 1 & 2.570e-02 & 0.000 & 1.075e+00 & 0.000\\ \hline 
+128  mixed full_weighting linear FMG
+ 1 & 1.475e-02 & 0.000 & 1.088e+00 & 0.000\\ \hline 
+256  mixed full_weighting linear FMG
+ 1 & 8.437e-03 & 0.000 & 1.097e+00 & 0.000\\ \hline 
+32  mixed full_weighting quadratic V_cycle
+ 1 & 1.753e-01 & 0.000 & 6.947e+00 & 0.000\\ \hline 
+64  mixed full_weighting quadratic V_cycle
+ 1 & 2.037e-01 & 0.000 & 1.300e+01 & 0.000\\ \hline 
+128  mixed full_weighting quadratic V_cycle
+ 1 & 2.273e-01 & 0.000 & 2.432e+01 & 0.000\\ \hline 
+256  mixed full_weighting quadratic V_cycle
+ 1 & 2.472e-01 & 0.000 & 4.630e+01 & 0.000\\ \hline 
+32  mixed full_weighting quadratic FMG
+ 1 & 1.543e-02 & 0.000 & 6.641e-01 & 0.000\\ \hline 
+64  mixed full_weighting quadratic FMG
+ 1 & 8.623e-03 & 0.000 & 6.686e-01 & 0.000\\ \hline 
+128  mixed full_weighting quadratic FMG
+ 1 & 4.915e-03 & 0.000 & 6.715e-01 & 0.000\\ \hline 
+256  mixed full_weighting quadratic FMG
+ 1 & 2.840e-03 & 0.000 & 6.734e-01 & 0.000\\ \hline 
+32  mixed injection linear V_cycle
+ 1 & 2.632e-01 & 0.000 & 8.287e+00 & 0.000\\ \hline 
+64  mixed injection linear V_cycle
+ 1 & 2.936e-01 & 0.000 & 1.497e+01 & 0.000\\ \hline 
+128  mixed injection linear V_cycle
+ 1 & 3.204e-01 & 0.000 & 2.759e+01 & 0.000\\ \hline 
+256  mixed injection linear V_cycle
+ 1 & 3.436e-01 & 0.000 & 5.221e+01 & 0.000\\ \hline 
+32  mixed injection linear FMG
+ 1 & 5.001e-02 & 0.000 & 1.168e+00 & 0.000\\ \hline 
+64  mixed injection linear FMG
+ 1 & 2.867e-02 & 0.000 & 1.195e+00 & 0.000\\ \hline 
+128  mixed injection linear FMG
+ 1 & 1.640e-02 & 0.000 & 1.213e+00 & 0.000\\ \hline 
+256  mixed injection linear FMG
+ 1 & 9.256e-03 & 0.000 & 1.224e+00 & 0.000\\ \hline 
+32  mixed injection quadratic V_cycle
+ 1 & 2.039e-01 & 0.000 & 9.407e+00 & 0.000\\ \hline 
+64  mixed injection quadratic V_cycle
+ 1 & 2.333e-01 & 0.000 & 1.828e+01 & 0.000\\ \hline 
+128  mixed injection quadratic V_cycle
+ 1 & 2.565e-01 & 0.000 & 3.516e+01 & 0.000\\ \hline 
+256  mixed injection quadratic V_cycle
+ 1 & 2.751e-01 & 0.000 & 6.821e+01 & 0.000\\ \hline 
+32  mixed injection quadratic FMG
+ 1 & 1.658e-02 & 0.000 & 7.281e-01 & 0.000\\ \hline 
+64  mixed injection quadratic FMG
+ 1 & 9.308e-03 & 0.000 & 7.325e-01 & 0.000\\ \hline 
+128  mixed injection quadratic FMG
+ 1 & 5.354e-03 & 0.000 & 7.359e-01 & 0.000\\ \hline 
+256  mixed injection quadratic FMG
+ 1 & 3.123e-03 & 0.000 & 7.380e-01 & 0.000\\ \hline 
