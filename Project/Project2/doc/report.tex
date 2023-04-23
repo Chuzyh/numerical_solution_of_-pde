@@ -84,7 +84,7 @@ mixed条件在一维时为左端点满足Dirichlet条件，右端点满足Neuman
     \item 剩下的点，由于相邻的四个点已经可以计算，可以定义为$I^h_{i,j}=\frac{I^h_{i,j+1}+I^h_{i,j-1}+I^h_{i-1,j}+I^h_{i+1,j}}{4}$
 \end{itemize}
 
-二维状态下的quadratic实现为一维的简单推广，即先将x轴方向加细，再将y轴方向加细。虽然看起来有点水，但实现得到的效果显著（可参考后续数值测试部分）。
+二维状态下的quadratic实现为一维的简单推广，即先将x轴方向加细，再将y轴方向加细。
 
 \section{程序测试结果}
 我选择的测试用的一维函数为：
@@ -195,5 +195,232 @@ data文件夹下是测试的具体结果：
     \end{table}
 
 可以发现三种边值条件下，使用不同的限制算子和插值算子，残差和误差都能较快地收敛较高的较低的水平，算法实现基本正确。
-\subsubsection{}
+\subsubsection{{误差范数关于N的收敛速度}}
+
+\verb|cycle_iteration_convergence_rate_of_funX|文件中有完整的数据，此处挑选几个展示：
+\begin{table}[H]
+    \centering
+    \caption{f1 Dirichlet full\_weighting quadratic V\_cycle}
+    \begin{tabular}{|c|l|l|l|l|}
+    \hline
+    N & Error       & Ratio     & Residual    & Ratio     \\ \hline
+ 32 & 6.552e-05 & 0.000 & 6.465e-14 & 0.000\\ \hline 
+ 64 & 1.580e-05 & 4.148 & 3.526e-13 & 0.183\\ \hline 
+ 128 & 3.876e-06 & 4.075 & 1.168e-12 & 0.302\\ \hline 
+ 256 & 9.600e-07 & 4.038 & 5.910e-12 & 0.198\\ \hline 
+ 512 & 2.389e-07 & 4.019 & 2.012e-11 & 0.294\\ \hline 
+ 1024 & 5.957e-08 & 4.009 & 8.822e-11 & 0.228\\ \hline 
+ 2048 & 1.488e-08 & 4.004 & 3.467e-10 & 0.254\\ \hline 
+ 4096 & 3.713e-09 & 4.007 & 1.430e-09 & 0.242\\ \hline 
+ 8192 & 9.280e-10 & 4.001 & 5.617e-09 & 0.255\\ \hline 
+ 16384 & 2.936e-10 & 3.160 & 2.281e-08 & 0.246\\ \hline 
+ 32768 & 2.041e-10 & 1.439 & 9.210e-08 & 0.248\\ \hline 
+ 65536 & 5.506e-10 & 0.371 & 3.640e-07 & 0.253\\ \hline       \end{tabular}
+\end{table}
+\begin{table}[H]
+    \centering
+    \caption{f2 Neumann injection quadratic V\_cycle}
+    \begin{tabular}{|c|l|l|l|l|}
+    \hline
+    N & Error       & Ratio     & Residual    & Ratio     \\ \hline
+    32 & 6.552e-05 & 0.000 & 6.465e-14 & 0.000\\ \hline 
+    64 & 1.580e-05 & 4.148 & 3.526e-13 & 0.183\\ \hline 
+    128 & 3.876e-06 & 4.075 & 1.168e-12 & 0.302\\ \hline 
+    256 & 9.600e-07 & 4.038 & 5.910e-12 & 0.198\\ \hline 
+    512 & 2.389e-07 & 4.019 & 2.012e-11 & 0.294\\ \hline 
+    1024 & 5.957e-08 & 4.009 & 8.822e-11 & 0.228\\ \hline 
+    2048 & 1.488e-08 & 4.004 & 3.467e-10 & 0.254\\ \hline 
+    4096 & 3.713e-09 & 4.007 & 1.430e-09 & 0.242\\ \hline 
+    8192 & 9.280e-10 & 4.001 & 5.617e-09 & 0.255\\ \hline 
+    16384 & 2.936e-10 & 3.160 & 2.281e-08 & 0.246\\ \hline 
+    32768 & 2.041e-10 & 1.439 & 9.210e-08 & 0.248\\ \hline 
+    65536 & 5.506e-10 & 0.371 & 3.640e-07 & 0.253\\ \hline        \end{tabular}
+\end{table}
+
+\begin{table}[H]
+    \centering
+    \caption{f3 mixed full\_weighting quadratic FMG}
+    \begin{tabular}{|c|l|l|l|l|}
+    \hline
+    N & Error       & Ratio     & Residual    & Ratio     \\ \hline
+    32 & 5.974e-04 & 0.000 & 2.797e-03 & 0.000\\ \hline 
+    64 & 1.472e-04 & 4.059 & 7.616e-04 & 3.673\\ \hline 
+    128 & 3.573e-05 & 4.119 & 1.988e-04 & 3.830\\ \hline 
+    256 & 8.572e-06 & 4.169 & 5.041e-05 & 3.945\\ \hline 
+    512 & 2.037e-06 & 4.208 & 1.260e-05 & 4.000\\ \hline 
+    1024 & 4.807e-07 & 4.238 & 3.155e-06 & 3.994\\ \hline 
+    2048 & 1.128e-07 & 4.261 & 8.052e-07 & 3.918\\ \hline 
+    4096 & 2.636e-08 & 4.280 & 2.165e-07 & 3.719\\ \hline 
+    8192 & 6.106e-09 & 4.317 & 6.652e-08 & 3.255\\ \hline 
+    16384 & 1.387e-09 & 4.401 & 8.285e-08 & 0.803\\ \hline 
+    32768 & 4.624e-10 & 3.000 & 2.929e-07 & 0.283\\ \hline 
+    65536 & 4.870e-10 & 0.950 & 1.095e-06 & 0.267\\ \hline         \end{tabular}
+\end{table}
+
+基本可以发现，不同方程使用不同算子和迭代算法，随着N的变大，一开始时N每扩大一倍，误差范数缩小为原来的四分之一，符合算法收敛阶为2的结论。
+
+但当N变得更大时，由于机器精度的问题，误差无法无限缩小，误差范数逐渐稳定在$1e-10$左右。
+
+一个奇怪的现象是使用V\_cycle算法时残差会随着N的变大而变大，但使用FMG算法则相反，不知道为什么。
+
+\subsection{二维情形}
+\subsubsection{{V-Cycle迭代的几个代表例子}}
+\verb|cycle_iteration_convergence_rate_of_fun2dX|文件中有完整的数据，此处挑选几个展示：
+
+\begin{table}[H]
+    \centering
+    \caption{f1 , N=128  Dirichlet full\_weighting linear V\_cycle}
+    \begin{tabular}{|c|l|l|l|l|}
+    \hline
+    Iteration & Error       & Ratio     & Residual    & Ratio     \\ \hline
+    
+    1 & 2.047e-01 & 0.000 & 6.565e+01 & 0.000\\ \hline 
+    2 & 1.401e-02 & 14.607 & 2.533e+00 & 25.921\\ \hline 
+    3 & 9.706e-04 & 14.435 & 1.041e-01 & 24.319\\ \hline 
+    4 & 6.883e-05 & 14.101 & 4.937e-03 & 21.096\\ \hline 
+    5 & 5.715e-06 & 12.044 & 2.641e-04 & 18.690\\ \hline 
+    6 & 1.254e-06 & 4.557 & 1.560e-05 & 16.936\\ \hline 
+    7 & 9.366e-07 & 1.339 & 9.969e-07 & 15.644\\ \hline 
+    8 & 9.139e-07 & 1.025 & 6.765e-08 & 14.737\\ \hline 
+    9 & 9.123e-07 & 1.002 & 4.751e-09 & 14.238\\ \hline     \end{tabular}
+    \end{table}
+
+
+    
+    \begin{table}[H]
+        \centering
+        \caption{f2 , N=256  Neumann injection linear V\_cycle}
+        \begin{tabular}{|c|l|l|l|l|}
+        \hline
+        Iteration & Error       & Ratio     & Residual    & Ratio     \\ \hline
+ 1 & 5.640e-02 & 0.000 & 1.084e+00 & 0.000\\ \hline 
+ 2 & 1.217e-02 & 4.634 & 1.352e-01 & 8.012\\ \hline 
+ 3 & 3.432e-03 & 3.546 & 2.415e-02 & 5.601\\ \hline 
+ 4 & 2.046e-03 & 1.677 & 4.707e-03 & 5.130\\ \hline 
+ 5 & 1.302e-03 & 1.571 & 1.180e-03 & 3.991\\ \hline 
+ 6 & 8.386e-04 & 1.553 & 6.823e-04 & 1.729\\ \hline 
+ 7 & 5.494e-04 & 1.526 & 4.254e-04 & 1.604\\ \hline 
+ 8 & 3.691e-04 & 1.489 & 2.653e-04 & 1.603\\ \hline 
+ 9 & 2.566e-04 & 1.438 & 1.655e-04 & 1.603\\ \hline 
+ 10 & 1.864e-04 & 1.376 & 1.032e-04 & 1.603\\ \hline 
+ 11 & 1.427e-04 & 1.307 & 6.435e-05 & 1.603\\ \hline 
+ 12 & 1.154e-04 & 1.236 & 4.013e-05 & 1.603\\ \hline 
+ 13 & 9.839e-05 & 1.173 & 2.503e-05 & 1.603\\ \hline 
+ 14 & 8.786e-05 & 1.120 & 1.561e-05 & 1.603\\ \hline 
+ 15 & 8.142e-05 & 1.079 & 9.735e-06 & 1.603\\ \hline 
+ 16 & 7.747e-05 & 1.051 & 6.071e-06 & 1.603\\ \hline 
+ 17 & 7.503e-05 & 1.032 & 3.786e-06 & 1.603\\ \hline 
+ 18 & 7.353e-05 & 1.020 & 2.361e-06 & 1.603\\ \hline 
+ 19 & 7.260e-05 & 1.013 & 1.473e-06 & 1.603\\ \hline 
+ 20 & 7.202e-05 & 1.008 & 9.184e-07 & 1.603\\ \hline    \end{tabular}
+        \end{table}
+
+\begin{table}[H]
+    \centering
+    \caption{f3 , N=64  mixed injection quadratic V\_cycle}
+    \begin{tabular}{|c|l|l|l|l|}
+    \hline
+    Iteration & Error       & Ratio     & Residual    & Ratio     \\ \hline
+ 1 & 5.204e-01 & 0.000 & 1.836e+01 & 0.000\\ \hline 
+ 2 & 1.772e-01 & 2.936 & 2.598e+00 & 7.067\\ \hline 
+ 3 & 4.791e-02 & 3.699 & 5.374e-01 & 4.836\\ \hline 
+ 4 & 1.074e-02 & 4.459 & 1.324e-01 & 4.059\\ \hline 
+ 5 & 9.713e-04 & 11.061 & 3.451e-02 & 3.836\\ \hline 
+ 6 & 1.785e-03 & 0.544 & 8.977e-03 & 3.844\\ \hline    \end{tabular}
+    \end{table}
+    
+可以发现三种边值条件下，使用不同的限制算子和插值算子，残差和误差都能较快地收敛较高的较低的水平，算法实现基本正确。
+
+\subsubsection{{误差范数关于N的收敛速度}}
+
+\verb|cycle_iteration_convergence_rate_of_fun2dX|文件中有完整的数据，此处挑选几个展示：
+
+\begin{table}[H]
+    \centering
+    \caption{f1 , Dirichlet full\_weighting linear V\_cycle}
+    \begin{tabular}{|c|l|l|l|l|}
+    \hline
+    N & Error       & Ratio     & Residual    & Ratio     \\ \hline
+ 32 & 1.457e-05 & 0.000 & 3.521e-08 & 0.000\\ \hline 
+ 64 & 3.649e-06 & 3.992 & 4.952e-08 & 0.711\\ \hline 
+ 128 & 9.123e-07 & 4.000 & 4.751e-09 & 10.423\\ \hline 
+ 256 & 2.282e-07 & 3.998 & 6.287e-09 & 0.756\\ \hline 
+ \end{tabular}
+    \end{table}
+\begin{table}[H]
+    \centering
+    \caption{f2 ,Neumann full\_weighting quadratic V\_cycle}
+    \begin{tabular}{|c|l|l|l|l|}
+    \hline
+    N & Error       & Ratio     & Residual    & Ratio     \\ \hline
+    32 & 1.992e-03 & 0.000 & 2.208e-03 & 0.000\\ \hline 
+    64 & 6.132e-04 & 3.249 & 4.545e-04 & 4.858\\ \hline 
+    128 & 1.571e-04 & 3.904 & 1.275e-04 & 3.565\\ \hline 
+    256 & 7.213e-05 & 2.178 & 1.087e-06 & 117.265\\ \hline 
+ \end{tabular}
+    \end{table}
+
+\begin{table}[H]
+    \centering
+    \caption{f3 ,mixed full\_weighting linear V\_cycle}
+    \begin{tabular}{|c|l|l|l|l|}
+    \hline
+    N & Error       & Ratio     & Residual    & Ratio     \\ \hline 
+     32 & 8.058e-03 & 0.000 & 2.235e-02 & 0.000\\ \hline 
+     64 & 2.189e-03 & 3.682 & 5.205e-03 & 4.295\\ \hline 
+     128 & 5.560e-04 & 3.936 & 1.404e-03 & 3.708\\ \hline 
+     256 & 1.361e-04 & 4.085 & 4.119e-04 & 3.408\\ \hline 
+ \end{tabular}
+    \end{table}
+基本可以发现，Dirichlet边界条件和Neumann边界条件的数值结果基本符合算法收敛阶为2的结论。
+Neumann边界条件时计算得到的误差收敛速度略小于二阶，可能是我用固定两点点值的方式构造的迭代矩阵谱半径较大而导致收敛速度慢导致的。
+
+\subsubsection{{V-cycle算法，FMG算法和LU分解算法求解的速度比较}}
+
+\verb|cpu_time_of_mutigrid_and_LU_of_fun2dX|文件中有完整的数据，此处挑选几个展示：
+
+由于不同算子的运算速度差距不大，为了减少测试时间，此处多重网格法使用的限制算子和插值算子分别固定为full\_weighting和quadratic
+\begin{table}[H]
+    \centering
+    \caption{f1 ,Dirichlet V\_cycle}
+    \begin{tabular}{|c|l|l|l|}
+    \hline
+    N & MG\_time       & LU\_time     & $\frac{LU\_time}{MG\_time}$    \\ \hline 
+    32 & 0.015625 & 0.078125 & 5\\ \hline 
+    64 & 0.03125 & 0.421875 & 13.5\\ \hline 
+    128 & 0.078125 & 2.35938 & 30.2\\ \hline 
+    256 & 0.40625 & 13.2812 & 32.6923\\ \hline 
+\end{tabular}
+\end{table}
+
+\begin{table}[H]
+    \centering
+    \caption{f1 ,Dirichlet FMG}
+    \begin{tabular}{|c|l|l|l|}
+    \hline
+    N & MG\_time       & LU\_time     & $\frac{LU\_time}{MG\_time}$    \\ \hline 
+    32 & 0.015625 & 0.078125 & 5\\ \hline 
+    64 & 0.015625 & 0.421875 & 27\\ \hline 
+    128 & 0.03125 & 2.34375 & 75\\ \hline 
+    256 & 0.140625 & 13.3125 & 94.6667\\ \hline 
+\end{tabular}
+\end{table}
+
+\begin{table}[H]
+    \centering
+    \caption{f3 ,mixed V\_cycle}
+    \begin{tabular}{|c|l|l|l|}
+    \hline
+    N & MG\_time       & LU\_time     & $\frac{LU\_time}{MG\_time}$    \\ \hline 
+    32 & 0 & 0.09375 & inf\\ \hline 
+    64 & 0.015625 & 0.421875 & 27\\ \hline 
+    128 & 0.09375 & 2.34375 & 25\\ \hline 
+    256 & 0.453125 & 13.2344 & 29.2069\\ \hline
+\end{tabular}
+
+ 容易发现随着N的变大，多重网格法的用时增长速度比LU分解法更慢，同时从用时倍数比可以发现，FMG算法也比V\_cycle算法的速度更快。
+
+\end{table}
+
+
 \end{document} 
