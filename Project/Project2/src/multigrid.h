@@ -676,7 +676,7 @@ class Multigrid_Method<2>
                     double now_error=error_norm(1);
                     double now_resi=residual_norm(1);
                     if(show_detail)printf(" %d & %.3e & %.3lf & %.3e & %.3lf\\\\ \\hline \n",i,now_error,la_error/now_error,now_resi,la_resi/now_resi);
-                    if(la_error/now_error<1.01)break;
+                    if(la_error/now_error<1.01&&i>1)break;
                     la_error=now_error;la_resi=now_resi;
                 }
                     

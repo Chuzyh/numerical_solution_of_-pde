@@ -194,7 +194,7 @@ int main()
     test_cycle(Fun7,3,"test.json");
 
 
-    /*test_fun2d(Fun,1,"test2.json");
+    test_fun2d(Fun,1,"test2.json");
     test_fun2d(Fun2,2,"test2.json");
     test_fun2d(Fun3,3,"test2.json");
     test_cycle2d(Fun,1,"test2.json");
@@ -203,6 +203,6 @@ int main()
     
     test_time2d(Fun,1,"test2.json");
     test_time2d(Fun2,2,"test2.json");
-    test_time2d(Fun3,3,"test2.json");*/
+    test_time2d(Fun3,3,"test2.json");
     return 0;
 }
