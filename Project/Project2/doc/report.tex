@@ -26,7 +26,9 @@
         sudo apt-get install libjsoncpp-dev
     \end{lstlisting}
 
-    在\verb|project|目录下使用\verb|make|命令即可编译运行整个项目并得到实验报告。
+    在\verb|project|目录下使用\verb|make|命令即可编译运行整个项目并得到实验报告。（测试数据较多，可能需要大约10min的时间）
+
+    如果您只需要渲染文档，可以使用\verb|make report|命令
 
 \section{程序设计思路}
 实现多重网格法计算的相关代码在头文件\verb|multigrid.h|中，其中主要设计了template <int dim> class Multigrid\_Method
@@ -42,8 +44,8 @@
     \item \verb|jacobi|：带权的雅各比迭代，其中参数$\omega=\frac{2}{3}$
     \item \verb|Vcycle|与\verb|FMG|：两种迭代算法
     \item \verb|accuracy|：计算当前解的相对精度
-    \item \verb|error\_norm|：计算当前解的误差范数
-    \item \verb|residual\_norm|：计算当前解的残差范数
+    \item \verb|error_norm|：计算当前解的误差范数
+    \item \verb|residual_norm|：计算当前解的残差范数
     \item \verb|solve|：制定$v_1$与$v_2$并进行求解
 \end{itemize}
 
@@ -61,12 +63,137 @@ mixed条件在一维时为左端点满足Dirichlet条件，右端点满足Neuman
 前者为限制最大迭代次数为st\_parm，后者为迭代至相对误差小于st\_parm。
 
 但为了避免死循环和减少不必要的迭代，当迭代时误差的收敛速度小于1.01时，也会停止迭代。
-\section{程序测试结果}
-我选择的测试用的函数为：
+
+\subsection{实现细节说明}
+\subsubsection{restriction算子}
+一维状态下的injection和full\_weighting和教材上的写法一致，二维状态下的injection是一维的简单推广。
+
+特别说明以下二维的full\_weighting算子的实现方式：
+
 \begin{itemize}
-    \item $f(x,y)=e^{x+sin(y)}$
-    \item $f(x,y)=sin(3x+3y)$
-    \item $f(x,y)=e^(x^3+y^3)$
+    \item 对于边界上的点，$I^{2h}_{i,j}=I^{h}_{i*2,j*2}$
+    \item 对于中间区域的点，，$I^{2h}_{i,j}=\frac{I^{h}_{i*2,j*2}*4+I^{h}_{i*2,j*2-1}+I^{h}_{i*2,j*2+1}+I^{h}_{i*2-1,j*2}+I^{h}_{i*2+1,j*2}}{8}$
+\end{itemize}
+\subsubsection{interpolation算子}
+一维状态下的linear和教材上的写法一致，quadratic即使用附近的三个粗网格上的点值插值得到二次函数计算细格点的值。
+
+二维状态下的linear实现方式为：
+\begin{itemize}
+    \item 对于粗网格上的已有的点，$I^h_{i*2,j*2}=I^{2h}_{i,j}$
+    \item 对于粗网格线上的点，$I^h_{i*2,j*2+1}=\frac{I^{2h}_{i,j}+I^{2h}_{i,j+1}}{2}$或者$I^h_{i*2+1,j*2}=\frac{I^{2h}_{i,j}+I^{2h}_{i+1,j}}{2}$
+    \item 剩下的点，由于相邻的四个点已经可以计算，可以定义为$I^h_{i,j}=\frac{I^h_{i,j+1}+I^h_{i,j-1}+I^h_{i-1,j}+I^h_{i+1,j}}{4}$
 \end{itemize}
 
+二维状态下的quadratic实现为一维的简单推广，即先将x轴方向加细，再将y轴方向加细。虽然看起来有点水，但实现得到的效果显著（可参考后续数值测试部分）。
+
+\section{程序测试结果}
+我选择的测试用的一维函数为：
+\begin{itemize}
+    \item $f_1(x)=e^{sin(x)}-1$
+    \item $f_2(x)=sin(x)$
+    \item $f_3(x)=e^(x^2)$
+\end{itemize}
+二维函数为：
+\begin{itemize}
+    \item $f_1(x,y)=e^{x+sin(y)}$
+    \item $f_2(x,y)=sin(3x+3y)$
+    \item $f_3(x,y)=e^(x^3+y^3)$
+\end{itemize}
+
+data文件夹下是测试的具体结果：
+\begin{itemize}
+    \item \verb|cycle_iteration_convergence_rate_of_funX|：是一维函数$f_X$在所有参数组合下的每次迭代结果的误差范数、误差收敛速度、残差范数、误差收敛速度的结果。
+    \item \verb|cycle_iteration_convergence_rate_of_fun2dX|：是二维函数$f_X$的对应结果
+    \item \verb|four_grid_convergence_rate_of_funX|：是一维函数$f_X$在不同参数组合下，网格加细时的误差与残差结果和收敛速度
+    \item \verb|four_grid_convergence_rate_of_fun2dX|：是二维函数$f_X$的对应结果
+    \item \verb|cpu_time_of_mutigrid_and_LU_of_fun2dX|：是二维函数$f_X$在不同参数组合下，网格加细时的多重网格法和LU分解法求解的时间和时间的比值
+\end{itemize}
+\subsection{一维情形}
+\subsubsection{{V-Cycle迭代的几个代表例子}}
+\verb|cycle_iteration_convergence_rate_of_funX|文件中有完整的数据，此处挑选几个展示：
+\begin{table}[H]
+    \centering
+    \caption{f1 , N=32  Dirichlet full\_weighting linear V\_cycle}
+    \begin{tabular}{|c|l|l|l|l|}
+    \hline
+    Iteration & Error       & Ratio     & Residual    & Ratio     \\ \hline
+    1 & 2.223e-02 & 0.000 & 9.132e-01 & 0.000\\ \hline 
+    2 & 8.470e-04 & 26.250 & 2.589e-02 & 35.274\\ \hline 
+    3 & 6.192e-05 & 13.679 & 7.783e-04 & 33.261\\ \hline 
+    4 & 3.291e-05 & 1.882 & 2.561e-05 & 30.389\\ \hline 
+    5 & 3.183e-05 & 1.034 & 8.781e-07 & 29.167\\ \hline 
+    6 & 3.179e-05 & 1.001 & 3.084e-08 & 28.476\\ \hline 
+    7 & 3.179e-05 & 1.000 & 1.093e-09 & 28.222\\ \hline 
+    8 & 3.179e-05 & 1.000 & 3.892e-11 & 28.072\\ \hline 
+    9 & 3.179e-05 & 1.000 & 1.408e-12 & 27.639\\ \hline 
+    10 & 3.179e-05 & 1.000 & 1.697e-13 & 8.299\\ \hline 
+    11 & 3.179e-05 & 1.000 & 1.381e-13 & 1.228\\ \hline 
+    12 & 3.179e-05 & 1.000 & 1.306e-13 & 1.058\\ \hline 
+    13 & 3.179e-05 & 1.000 & 1.113e-13 & 1.173\\ \hline 
+    14 & 3.179e-05 & 1.000 & 8.585e-14 & 1.297\\ \hline 
+    15 & 3.179e-05 & 1.000 & 1.280e-13 & 0.671\\ \hline 
+    16 & 3.179e-05 & 1.000 & 1.460e-13 & 0.876\\ \hline 
+    17 & 3.179e-05 & 1.000 & 1.118e-13 & 1.306\\ \hline 
+    18 & 3.179e-05 & 1.000 & 1.266e-13 & 0.883\\ \hline 
+    19 & 3.179e-05 & 1.000 & 1.193e-13 & 1.061\\ \hline 
+    20 & 3.179e-05 & 1.000 & 1.276e-13 & 0.935\\ \hline     \end{tabular}
+    \end{table}
+
+    \begin{table}[H]
+        \centering
+        \caption{f2 , N=65536  Neumann full\_weighting quadratic V\_cycle}
+        \begin{tabular}{|c|l|l|l|l|}
+        \hline
+        Iteration & Error       & Ratio     & Residual    & Ratio     \\ \hline
+ 1 & 1.334e-01 & 0.000 & 1.639e+03 & 0.000\\ \hline 
+ 2 & 6.688e-02 & 1.995 & 4.906e+01 & 33.417\\ \hline 
+ 3 & 2.571e-02 & 2.601 & 1.582e+00 & 31.011\\ \hline 
+ 4 & 8.213e-03 & 3.131 & 1.088e-01 & 14.536\\ \hline 
+ 5 & 2.303e-03 & 3.567 & 2.306e-02 & 4.719\\ \hline 
+ 6 & 5.890e-04 & 3.909 & 6.430e-03 & 3.587\\ \hline 
+ 7 & 1.413e-04 & 4.167 & 1.621e-03 & 3.966\\ \hline 
+ 8 & 3.246e-05 & 4.354 & 3.845e-04 & 4.217\\ \hline 
+ 9 & 7.237e-06 & 4.485 & 8.722e-05 & 4.408\\ \hline 
+ 10 & 1.582e-06 & 4.575 & 1.916e-05 & 4.553\\ \hline 
+ 11 & 3.414e-07 & 4.633 & 4.150e-06 & 4.617\\ \hline 
+ 12 & 7.375e-08 & 4.629 & 9.996e-07 & 4.151\\ \hline 
+ 13 & 1.803e-08 & 4.089 & 4.192e-07 & 2.385\\ \hline 
+ 14 & 5.369e-09 & 3.359 & 3.276e-07 & 1.280\\ \hline 
+ 15 & 1.900e-09 & 2.825 & 3.135e-07 & 1.045\\ \hline 
+ 16 & 9.988e-10 & 1.903 & 3.148e-07 & 0.996\\ \hline 
+ 17 & 5.938e-10 & 1.682 & 3.148e-07 & 1.000\\ \hline 
+ 18 & 4.559e-10 & 1.303 & 3.153e-07 & 0.998\\ \hline 
+ 19 & 4.794e-10 & 0.951 & 3.149e-07 & 1.001\\ \hline 
+ 20 & 4.246e-10 & 1.129 & 3.133e-07 & 1.005\\ \hline       \end{tabular}
+    \end{table}
+    \begin{table}[H]
+        \centering
+        \caption{f3 , N=512  mixed injection quadratic V\_cycle}
+        \begin{tabular}{|c|l|l|l|l|}
+        \hline
+        Iteration & Error       & Ratio     & Residual    & Ratio     \\ \hline
+        1 & 7.156e-02 & 0.000 & 3.961e+01 & 0.000\\ \hline 
+        2 & 2.100e-02 & 3.407 & 1.391e+00 & 28.480\\ \hline 
+        3 & 4.045e-03 & 5.192 & 5.999e-02 & 23.185\\ \hline 
+        4 & 9.288e-04 & 4.355 & 3.995e-03 & 15.017\\ \hline 
+        5 & 2.013e-04 & 4.614 & 5.381e-04 & 7.424\\ \hline 
+        6 & 4.203e-05 & 4.790 & 1.048e-04 & 5.134\\ \hline 
+        7 & 6.622e-06 & 6.347 & 2.260e-05 & 4.638\\ \hline 
+        8 & 1.218e-06 & 5.439 & 4.992e-06 & 4.526\\ \hline 
+        9 & 2.955e-06 & 0.412 & 1.105e-06 & 4.519\\ \hline 
+        10 & 3.340e-06 & 0.885 & 2.448e-07 & 4.512\\ \hline 
+        11 & 3.425e-06 & 0.975 & 5.425e-08 & 4.513\\ \hline 
+        12 & 3.444e-06 & 0.995 & 1.202e-08 & 4.513\\ \hline 
+        13 & 3.449e-06 & 0.999 & 2.665e-09 & 4.509\\ \hline 
+        14 & 3.449e-06 & 1.000 & 6.014e-10 & 4.432\\ \hline 
+        15 & 3.450e-06 & 1.000 & 1.616e-10 & 3.723\\ \hline 
+        16 & 3.450e-06 & 1.000 & 8.564e-11 & 1.887\\ \hline 
+        17 & 3.450e-06 & 1.000 & 7.376e-11 & 1.161\\ \hline 
+        18 & 3.450e-06 & 1.000 & 7.663e-11 & 0.962\\ \hline 
+        19 & 3.450e-06 & 1.000 & 7.482e-11 & 1.024\\ \hline 
+        20 & 3.450e-06 & 1.000 & 7.301e-11 & 1.025\\ \hline       \end{tabular}
+    \end{table}
+
+可以发现三种边值条件下，使用不同的限制算子和插值算子，残差和误差都能较快地收敛较高的较低的水平，算法实现基本正确。
+\subsubsection{}
 \end{document} 
