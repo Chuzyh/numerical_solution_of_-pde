@@ -1,0 +1,104 @@
+\documentclass[twoside,a4paper]{article}
+\usepackage{geometry}
+\usepackage{ctex, hyperref}
+\geometry{margin=1.5cm, vmargin={0pt,1cm}}
+\setlength{\topmargin}{-1cm}
+\setlength{\paperheight}{29.7cm}
+\setlength{\textheight}{25.3cm}
+
+% useful packages.
+\usepackage{amsfonts}
+\usepackage{amsmath}
+\usepackage{amssymb}
+\usepackage{amsthm}
+\usepackage{enumerate}
+\usepackage{graphicx}
+\usepackage{multicol}
+\usepackage{fancyhdr}
+\usepackage{layout}
+
+% some common command
+\newcommand{\dif}{\mathrm{d}}
+\newcommand{\avg}[1]{\left\langle #1 \right\rangle}
+\newcommand{\difFrac}[2]{\frac{\dif #1}{\dif #2}}
+\newcommand{\pdfFrac}[2]{\frac{\partial #1}{\partial #2}}
+\newcommand{\OFL}{\mathrm{OFL}}
+\newcommand{\UFL}{\mathrm{UFL}}
+\newcommand{\fl}{\mathrm{fl}}
+\newcommand{\op}{\odot}
+\newcommand{\Eabs}{E_{\mathrm{abs}}}
+\newcommand{\Erel}{E_{\mathrm{rel}}}
+
+\begin{document}
+
+\pagestyle{fancy}
+\fancyhead{}
+\lhead{褚朱钇恒 (3200104144)}
+\chead{Numerical PDE homework \#3}
+\rhead{2023.5.5}
+
+\section{Exercise 11.9}
+
+验证real positivity，由$||T||\ge \inf\{M\ge 0\}=0\Rightarrow ||T||\ge 0$
+
+验证point separation，$||T||=0\Rightarrow \forall x,||Tx||\le M||x||=0\Rightarrow T=0$
+
+验证absolute homogeneity，$\forall a\in \mathbb{F},v\in \mathcal{V}(\mathbb{F}^n,\mathbb{F}^m)$
+
+有$||av||=\inf\{M\ge 0:\forall x\in \mathbb{F}^n,|avx|=|a||vx|\le M|x|\}$
+
+若$|a|=0,||av||=0=|a|||v||$,否则，有$||av||=\inf{M\ge 0:\forall x\in \mathbb{F}^n,|vx|\le \frac{M}{|a|}|x|}$,也有$||av||=|a|||v||$
+
+\
+
+验证triangle inequality，$\forall u,v\in \mathcal{V}(\mathbb{F}^n,\mathbb{F}^m)$
+
+
+$||u+v||=\inf\{M\ge 0:\forall x\in \mathbb{F}^n,|(u+v)x|=|ux+vx|\le M|x|\}$
+
+设$||u||=M_1,||v||=M_2$，则有$\forall x\in \mathbb{F}^n,|ux|\le M_1|x|,|vx|\le M_2|x|\Rightarrow |ux|+|vx|\le (M_1+M_2)|x|$
+
+有$||u+v||\le M_1+M_2=||u||+||v||$
+
+所以有$||\cdot||$是一个范数
+
+\section{Exercise 11.13}
+验证non-negativity，由范数的非负性，$d(S,T)=||S-T||\ge 0$
+
+验证identity of indiscernibles，$d(S,T)=0\Leftrightarrow ||S-T||=0 \Leftrightarrow $
+
+$\forall x |(S-T)x|=0=|Sx-Tx|\Leftrightarrow \forall x Sx=Tx \Leftrightarrow S=T$
+
+\
+
+验证symmetry，$d(S,T)=||S-T||=||T-S||=d(T,S)$
+
+验证triangle inequality，$d(A,B)=||A-B||\le ||A-C||+||C-B||=d(A,C)+d(C,B)$
+
+\section{Exercise 11.16}
+real positivity,point separation,absolute homogeneity显然，下证triangle inequality：
+
+\begin{align}
+  ||u+v||^2&= \sum_{j=1}^n||ue_j+ve_j||^2\\
+  &= \sum_{j=1}^n(||ue_j||^2+||ve_j||^2+2\langle ue_j,ve_j\rangle)\\
+  &=||u||^2+||v||^2+2\sum_{j=1}^n\langle ue_j,ve_j\rangle(\mbox{由内积的性质})\\
+  &\le ||u||^2+||v||^2+2\sqrt{\sum_{j=1}^n||ue_j||^2||ve_j||^2}(\mbox{由柯西不等式})\\
+  &\le ||u||^2+||v||^2+2\sqrt{\sum_{j=1}^n||ue_j||^2\sum_{j=1}^n||ve_j||^2}\\
+  &\le ||u||^2+||v||^2+2\sqrt{||u||^2||v||^2}\\
+  &\le ||u||^2+||v||^2+2||u||||v||\\
+  &\le (||u||+||v||)^2\\
+\end{align}
+
+两边同时开平方即可得$||u+v||\le ||u||+||v||$
+
+
+\section{Exercise 11.20}
+
+由11.18有$|TSx|\le|T||Sx|$
+
+则$|TS|^2=\sum_{j=1}^k||TSe_j||^2\le\sum_{j=1}^k(|T||Se_j||)^2=|T|^2\sum_{j=1}^k(|Se_j||)^2=|T|^2|S|^2$
+
+两边同时开平方即可得$|TS|\le|T||S|$
+
+
+\end{document}
