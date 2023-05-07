@@ -1,0 +1,290 @@
+\documentclass[twoside,a4paper]{article}
+\usepackage{geometry}
+\usepackage{ctex, hyperref}
+\geometry{margin=1.5cm, vmargin={0pt,1cm}}
+\setlength{\topmargin}{-1cm}
+\setlength{\paperheight}{29.7cm}
+\setlength{\textheight}{25.3cm}
+
+% useful packages.
+\usepackage{amsfonts}
+\usepackage{amsmath}
+\usepackage{amssymb}
+\usepackage{amsthm}
+\usepackage{enumerate}
+\usepackage{graphicx}
+\usepackage{multicol}
+\usepackage{fancyhdr}
+\usepackage{layout}
+\usepackage{listings}%插入代码
+\usepackage{ctex}%引入中文包
+\usepackage{graphicx}%插入图片的包
+\usepackage{geometry}%设置A4纸页边距的包
+\usepackage{url}
+\usepackage{stfloats}
+\usepackage{float}
+\usepackage{amssymb}
+\usepackage{listings}
+% some common command
+\newcommand{\dif}{\mathrm{d}}
+\newcommand{\avg}[1]{\left\langle #1 \right\rangle}
+\newcommand{\difFrac}[2]{\frac{\dif #1}{\dif #2}}
+\newcommand{\pdfFrac}[2]{\frac{\partial #1}{\partial #2}}
+\newcommand{\OFL}{\mathrm{OFL}}
+\newcommand{\UFL}{\mathrm{UFL}}
+\newcommand{\fl}{\mathrm{fl}}
+\newcommand{\op}{\odot}
+\newcommand{\Eabs}{E_{\mathrm{abs}}}
+\newcommand{\Erel}{E_{\mathrm{rel}}}
+
+\begin{document}
+
+\pagestyle{fancy}
+\fancyhead{}
+\lhead{褚朱钇恒 (3200104144)}
+\chead{Numerical PDE homework \#4}
+\rhead{2023.5.7}
+
+\section{Exercise 11.159}
+红线代表$U_{n+1}-(u(t_{n+1})-u(t_{n})+U^n)=-(u(t_{n+1})-u(t_{n})-k\Phi(U_n,t_n;k))$
+
+而$\mathcal{L}u(t_n)=u(t_{n+1})-u(t_{n})-k\Phi(u(t_n),t_n;k)$
+
+可以发现$\Phi(u(t_n),t_n;k)$另一个是$\Phi(U_n,t_n;k)$故两者不相等
+\section{Exercise 11.161}
+$$\left\{\begin{aligned}
+    U^* & = U^n+\frac{k}{4}(f(U^n, t_n)+f(u^*,t_n+\frac{k}{2})) \\
+    U^{n+1} & = \frac{1}{3}(4U^*-U^n+kf(U^{n+1} ,t_{n+1}))
+  \end{aligned}\right.$$
+令$U^* = U^n+\frac{k}{4}(y_1+y_2)$，则可改写为
+$$\left\{
+ \begin{aligned}
+ y_1&=f(U^n, t_n)\\
+ y_2 &= f(U^*, t_n + \frac{k}{2})\\
+ y_3 &= f(U^n + \frac{k}{3}(y_1 + y_2+ y_3), t_n+k)\\
+ U^{n+1} &= U^n + \frac{k}{3}(y_1+y_2 +y_3)
+ \end{aligned}\right.$$
+
+ 图就不会画了（
+ 
+\section{Exercise 11.165}
+泰勒展开可得$u(t_{n+1}) - u(t_{n-1})=2ku'(t_n) + \frac{k^3}{6}u'''(t_n) +\Theta(k^4)$
+
+代入$\mathcal{L}u(t_n)$则有
+$$\begin{aligned}
+    \mathcal{L}u(t_n) &= u(t_{n+1}) - u(t_{n-1}) - 2kf(u(t_n), t_n)\\
+    &= 2ku'(t_n) + \frac{k^3}{6}u'''(t_n) +\Theta(k^4)- 2ku'(t_n)\\
+    &= \frac{k^3}{6}u'''(t_n)+\Theta(k^4) \\
+    &= \Theta(k^3)
+\end{aligned}$$
+
+\section{Exercise 11.174}
+为了证明TR-BDF2方法的稳定性函数为$R(z)=1+5/(12z)/(1-7/(12z)+1/(12z^2))$，我们需要将该方法的一步截断误差展开到z的三阶项。
+
+具体地，我们有
+
+$$U_{n+1} - R(z)U_n = \frac{k}{3}(4U^* - U_n + f(U_{n+1}, t_{n+1})k)$$
+
+其中U*满足
+
+$$U^* = U_n + \frac{k}{4}(f(U_n, t_n) + f(U^*, t_n + k/2))$$
+
+将U*代入上式中，并将其展开为关于z的幂级数，我们得到
+
+$$Un+1 - R(z)Un = k^3/24 (f'''(tn+1)Un + O(z^3))$$
+
+因此，TR-BDF2方法的稳定性函数为$R(z)=1+5/(12z)/(1-7/(12z)+1/(12z^2))$。
+
+接下来，我们证明当z→0时，$R(z)-e^z=O(z^3)$。注意到
+
+$$R(z)-e^z = (1+5/(12z)/(1-7/(12z)+1/(12z^2))) - (1+z+z^2/2+z^3/6+O(z^4))$$
+
+将等式两边展开为关于z的幂级数，并观察其$z^3$的系数，我们得到
+
+$$R(z)-e^z = z^3/24 + O(z^4)$$
+
+因此，$R(z)-e^z=O(z^3)$当z→0。
+\section{Exercise 11.182}
+\subsection{Modified Euler method}
+$A=\begin{pmatrix}
+    0& 0\\
+    \frac{1}{2} & \frac{1}{2} 
+   \end{pmatrix}$
+   $B=\begin{pmatrix}
+    0 &1
+   \end{pmatrix}$
+   $C=\begin{pmatrix}
+    0 &\frac{1}{2}
+   \end{pmatrix}$
+\subsection{Improved Euler method}
+$A=\begin{pmatrix}
+    0& 0\\
+    1 & 1 
+   \end{pmatrix}$
+   $B=\begin{pmatrix}
+    \frac{1}{2} &\frac{1}{2}
+   \end{pmatrix}$
+   $C=\begin{pmatrix}
+    0 &1
+   \end{pmatrix}$
+\subsection{Heun’s third-order formula}
+$A=\begin{pmatrix}
+    0& 0 & 0\\
+    \frac{1}{3} & 0& 0 \\
+    0& \frac{2}{3}& 0 
+   \end{pmatrix}$
+   $B=\begin{pmatrix}
+    \frac{1}{4} &0 &\frac{3}{4}
+   \end{pmatrix}$
+   $C=\begin{pmatrix}
+    0 &\frac{1}{3}&\frac{2}{3}
+   \end{pmatrix}$
+\section{Exercise 11.183}
+
+令$\xi_i=U_n+k\sum_{j=1}^sa_{i,j}y_j$
+
+则有$$y_i=f(\xi_i,t_n+c_ik)$$
+
+代入得$\xi_i=U_n+k\sum_{j=1}^sa_{i,j}f(\xi_i,t_n+c_ik)$
+
+故有$U_{n+1}=U_n+k\sum_{i=1}^sb_iy_i=U_n+k\sum_{i=1}^sb_if(\xi_i,t_n+c_ik)$
+\section{Exercise 11.190}
+易得$\alpha=\frac{3}{4}$，则$a_{3,2}=\frac{1}{3}\neq \frac{2}{3}$
+
+所以不属于这一族
+
+\section{Exercise 11.196}
+
+充分性：
+
+设$f\in P_{r-1}$，即$f(t) = \sum_{i=0}^{r-1} a_i t^i$，则
+$$\begin{aligned}
+Is(f) &= \sum_{j=1}^s b_j f(t_n + c_jk) \\
+&= \sum_{j=1}^s b_j \sum_{i=0}^{r-1} a_i(t_n + c_jk)^i \\
+&= \sum_{i=0}^{r-1} a_i \sum_{j=1}^s b_j \sum_{k=0}^i {i\choose k} c_j^k k^{i-k}k \\
+&= \sum_{i=0}^{r-1} a_i \sum_{j=1}^s b_j \sum_{k=0}^{i-1} {i-1\choose k} c_j^k \frac{k^{i-k}}{i} \\
+&\quad + \sum_{j=1}^s b_j \frac{1}{r} \sum_{k=0}^{r-1} {r\choose k} c_j^k k^{r-k}k \\
+&= \sum_{i=0}^{r-1} a_i \int_{t_n}^{t_{n+1}} t^idt + \frac{k^r}{r}\sum_{j=1}^s b_j \\
+&= \int_{t_n}^{t_{n+1}} f(t)dt.
+\end{aligned}$$
+因此，如果RK方法是B(r)的，则对于所有次数小于r的多项式f，它的数值积分公式都是精确的。
+
+
+必要性：
+
+假设RK方法对于所有次数小于$r$的多项式$f$都是精确的，即$Is(f) = \int_{t_n}^{t_{n+1}} f(t)dt$对于所有$f \in P_{r-1}$成立。要证明该RK方法是B(r)，我们需要证明对于所有$l = 1, 2, \dots, r$和$i = 1, 2, \dots, s$，有$b^Tc_{l-1} = \sum_{j=1}^sb_jc_{l-1,j} = \frac{1}{l}$。
+
+由于该RK方法是精确的，所以对于任何$f(t) = t^k$，其中$k = 0, 1, \dots, r-1$，都有$Is(f) = \int_{t_n}^{t_{n+1}}f(t)dt$成立。因此，
+$$\begin{aligned}
+Is(f(t)) &= \sum_{j=1}^s b_j f(t_n + c_jk) \\
+&= \sum_{j=1}^s b_j (t_n + c_jk)^k \\
+&= \int_{t_n}^{t_{n+1}}f(t)dt\\
+&=\frac{1}{k+1}(t_{n+1}^{k+1}-t_{n}^{k+1})
+\end{aligned}$$
+
+$k$取为$l-1$，得到：
+$\frac{1}{l}=\frac{1}{l}(t_{n+1}^{l}-t_{n}^{l})=\sum_{j=1}^sb_jc_{l-1,j}$
+
+因此，对于所有$l = 1, 2, \dots, r$和$i = 1, 2, \dots, s$，有$b^Tc_{l-1} = \sum_{j=1}^sb_jc_{l-1,j} = \frac{1}{l}$。因此，该RK方法是B(r)的。
+
+\section{Exercise 11.213}
+根据插值公式得$\exists xi\in(x_n,x_{n+1})$
+
+$$\begin{aligned}
+\mathcal{L}u(t_n) &=u(t_{n+1})-p(t_{n+1})\\
+&=\frac{u^{(s+1)(\xi)k^{s+1}}}{(s+1)!}\Pi_{i=0}^sc_i=\Theta(k^{s+1})
+\end{aligned}$$
+
+
+\section{Exercise 11.214}
+由$l_j$的次数小于s，由$\forall c_i,\sum_{j=1}^sl_j(c_i)=1$
+
+则$\sum_{j=1}^sl_j(c_i)=1$,代入即可得到
+
+$$\sum_{j=1}^sa_{ij}=\int_0^{c_i}\sum_{j=1}^sl_j(c_i)=c_i$$
+
+$$\sum_{j=1}^sb_j=\int_0^1\sum_{j=1}^sl_j(c_i)=1$$
+\section{Exercise 11.216}
+由$$l_j(x)=\Pi_{j=1}^s\frac{x-c_k}{c_j-c_k}$$
+
+$$\sum_{j=1}^sa_{ij}=\int_0^{c_i}\sum_{j=1}^sl_j(c_i)$$
+
+$$\sum_{j=1}^sb_j=\int_0^1\sum_{j=1}^sl_j(c_i)$$
+
+将$c_1,c_2,c_3$代入解得
+
+$A=\begin{pmatrix}
+    \frac{23}{48}& -\frac{1}{3} & \frac{5}{48}\\
+    \frac{7}{12}& -\frac{1}{6} & \frac{1}{12}\\
+    \frac{9}{16}& 0 & \frac{3}{16}\\
+    \end{pmatrix}$\\
+   $B=\begin{pmatrix}
+    \frac{2}{3} & -\frac{1}{3} &\frac{2}{3}
+   \end{pmatrix}$\\
+   $C=\begin{pmatrix}
+    \frac{1}{4} &\frac{1}{2}&\frac{3}{4}
+   \end{pmatrix}$
+   \section{Exercise 11.219}
+
+   令$v^{'}=V(c_1,...,c_s)v,u^{'}=V(c_1,...,c_s)u$，
+
+   将$B(s+r)$与$C(s)$代入得
+
+   则易得$v^{'}_i=\frac{1}{(k+1)(k+m+1)}=u^{'}_i$
+
+   于是有$u=v$，即$D(r)$成立
+
+ \section{Exercise 11.223}
+
+ $q_r(x)=(x-0.25)(x-0.5)(x-0.75)$,则有
+
+ $<q_r,1>=0,<q_r,x>\neq0$
+
+ 由Lemma 11.221得精度为$s + r − 1=3+1-1=3$阶
+
+ 
+ \section{Exercise 11.248}
+
+ 将
+ $A=\begin{pmatrix}
+    0&0&0&0\\
+    0&\frac{1}{2}&0&0\\
+    0&0&\frac{1}{2}&0\\
+    0&0&0&0\\
+    \end{pmatrix}$\\
+   $B=\begin{pmatrix}
+    \frac{1}{6} & \frac{1}{3} &\frac{1}{3} &\frac{1}{6}
+   \end{pmatrix}$\\
+   $C=\begin{pmatrix}
+    0 &\frac{1}{2}&\frac{1}{2}&1
+   \end{pmatrix}$
+
+   代入Corollary 11.246的公式中即可得$R(z)=1+z+\frac{1}{2}z^2+\frac{1}{6}z^3+\frac{1}{24}z^4$
+
+ \section{Exercise 11.252}
+ 易得
+
+ $$R_1(z)=1+z$$
+ $$R_2(z)=1+z+\frac{1}{2}z^2$$
+ $$R_3(z)=1+z+\frac{1}{2}z^2+\frac{1}{6}z^3$$
+ 
+ 若$|1+z|\le 1$,则有$|1+z+\frac{1}{2}z^2|=\frac{1}{2}|(1+z)^2+1|\le 1$
+
+ 故$S_1\subset  S_2$
+ 
+ 高阶的ERK没有包含关系，从图中可以看出，在第一象限，存在$S_3$中的点不包含在$S_4$中，具体而言，令$z=i+0.01$,$|R_3(z)|=0.98<1,|R_4(z)|>1$
+
+ 
+ \section{Exercise 11.259}
+设$P(z)=\sum_{i=0}^np_iz^i,Q(z)=\sum_{i=0}^mq_iz^i$
+
+ $$\lim_{z\rightarrow \inf}R(z)=\lim_{z\rightarrow \inf}\frac{|p_m||z|^{n-m}+O(|z|^{m-n})}{|q_n|+O(1)}$$
+
+ 所以$\lim_{z\rightarrow \inf}R(z) \Leftrightarrow n<m$
+
+ 
+ \section{Exercise 11.262}
+ 由Corollary 11.246，$$\lim_{z\rightarrow \infty}R(z)=\lim_{z\rightarrow \infty}(1+zb^T(I-zA)^{-1}1)$$
+
+   由题意得$A^Te_1=b$，则有$$\lim_{z\rightarrow \infty}R(z)=\lim_{z\rightarrow \infty}(1+b^TA^{-1}1)=0$$
+ \end{document}
