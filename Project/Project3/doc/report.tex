@@ -1,0 +1,35 @@
+\documentclass[12]{article}%12pt即为*四号字
+\usepackage{ctex}%引入中文包
+\usepackage{graphicx}%插入图片的包
+\usepackage{geometry}%设置A4纸页边距的包
+\usepackage{url}
+\usepackage{stfloats}
+\usepackage{float}
+\usepackage{amssymb}
+\usepackage{listings}
+\geometry{left=3.18cm,right=3.18cm,top=2.54cm,bottom=2.54cm}%设置页边距
+\linespread{1}%设置行间距
+
+
+\begin{document}
+\begin{center}
+    \LARGE\songti\textbf{微分方程数值解Project3作业报告} \\%标题
+    \large\kaishu\textbf{褚朱钇恒\qquad 3200104144}%一般是我的姓名
+\end{center}
+\section{运行说明}
+    本项目需要调用\verb|jsoncpp|与\verb|eigen3|库，故请在运行此项目前安装好这两个包。
+    
+    您可以使用以下命令进行安装：
+
+    \begin{lstlisting}
+        sudo apt-get install libeigen3-dev
+        sudo apt-get install libjsoncpp-dev
+    \end{lstlisting}
+
+    在\verb|project|目录下使用\verb|make|命令即可编译运行整个项目并得到实验报告。（测试数据较多，可能需要大约10min的时间）
+
+    如果您只需要渲染文档，可以使用\verb|make report|命令
+
+\section{程序设计思路}
+
+\end{document} 
