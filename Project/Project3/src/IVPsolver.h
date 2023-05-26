@@ -5,6 +5,7 @@
 #include <eigen3/Eigen/Sparse>
 using namespace Eigen;
 using namespace std;
+const double EPS=1e-11;
 void ERROR(string wrongmessage)
 {
     cerr<<wrongmessage<<endl;
@@ -55,6 +56,12 @@ vector<double> f(const vector<double> &v,double t)
     re[3]=2 * v[4] + v[0] - (mu * (v[0] + mu - 1)) / pow((pow(v[1], 2) + pow(v[2], 2) + pow(v[0] + mu - 1, 2)), 1.5) - ((1 - mu) * (v[0] + mu)) / pow((pow(v[1], 2) + pow(v[2], 2) + pow(v[0] + mu, 2)), 1.5);
     re[4]=-2 * v[3] + v[1] - (mu * v[1]) / pow((pow(v[1], 2) + pow(v[2], 2) + pow(v[0] + mu - 1, 2)), 1.5) - ((1 - mu) * v[1]) / pow((pow(v[1], 2) + pow(v[2], 2) + pow(v[0] + mu, 2)), 1.5);
     re[5]=-(mu * v[2]) / pow((pow(v[1], 2) + pow(v[2], 2) + pow(v[0] + mu - 1, 2)), 1.5) - ((1 - mu) * v[2]) / pow((pow(v[1], 2) + pow(v[2], 2) + pow(v[0] + mu, 2)), 1.5);
+    return re;
+}
+double norm_inf(vector<double> x)
+{
+    double re=0;
+    for(int i=0;i<(int)x.size();i++)re=re>abs(x[i])?re:abs(x[i]);
     return re;
 }
 #endif
