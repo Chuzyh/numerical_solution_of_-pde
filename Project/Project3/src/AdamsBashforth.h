@@ -19,10 +19,10 @@ public:
         auto now=init;
         for(int i=1;i<p;i++)
         {
-            auto y1=f(now);
-            auto y2=f(now+0.5*tick*y1);
-            auto y3=f(now+0.5*tick*y2);
-            auto y4=f(now+tick*y3);
+            auto y1=f(now,i*tick);
+            auto y2=f(now+0.5*tick*y1,(i+0.5)*tick);
+            auto y3=f(now+0.5*tick*y2,(i+0.5)*tick);
+            auto y4=f(now+tick*y3,(i+1)*tick);
             now=now+(tick/6)*(y1+2.0*y2+2.0*y3+y4);
             result.push_back(now);
         }
@@ -43,7 +43,7 @@ public:
         {
             now=result[i-1];
             for(int j=0;j<p;j++)
-                now=now+tick*(beta[j]*f(result[i-j-1]));
+                now=now+tick*(beta[j]*f(result[i-j-1],(i-j-1)*tick));
             result.push_back(now);
         }
         freopen("ABF.data","w",stdout);

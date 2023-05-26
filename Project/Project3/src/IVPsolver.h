@@ -20,6 +20,12 @@ class LMM : public IVPsolver
 public:
     vector<double> alpha,beta;
 };
+class RKM : public IVPsolver
+{
+public:
+    vector<double> RKweights,RKnodes;
+    vector<vector<double> > RKMatrix;
+};
 
 template<typename T> vector<T> operator +(const vector<T> &a,const vector<T> &b)
 {
@@ -41,7 +47,7 @@ template<typename T> vector<T> operator *(const T &a,const vector<T> &b)
     for(int i=0;i<(int)b.size();i++)re.push_back(a*b[i]);
     return re;
 }
-vector<double> f(const vector<double> &v)
+vector<double> f(const vector<double> &v,double t)
 {
     double mu=1.0/81.45;
     vector<double> re;re.resize(6);
