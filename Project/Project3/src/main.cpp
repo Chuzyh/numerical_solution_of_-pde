@@ -6,6 +6,7 @@
 #include "ESDIRK.h"
 #include "GaussLegendreRK.h"
 #include "FehlbergRK.h"
+#include "DormandPrinceRK.h"
 // #include <jsoncpp/json/json.h>
 using namespace std;
 
@@ -17,8 +18,8 @@ const vector<double> INIT2={0.87978, 0, 0, 0, -0.3797, 0};
 const int n=8000;
 int main()
 {
-    // AdamsBashforth_solver abm(4,T1,INIT,n);
-    // abm.solve();
+    AdamsBashforth_solver abm(1,T1,INIT,n);
+    abm.solve();
 
     // AdamsMoulton_solver adm(4,T2,INIT2,n);
     // adm.solve();
@@ -29,7 +30,9 @@ int main()
     // rk.solve();
     // ESDIRK_solver esdirk(T1,INIT,n);
     // esdirk.solve();
-    FehlbergRK_solver rk(5,T2,INIT2,n);
+    // FehlbergRK_solver rk(5,T2,INIT2,n);
+    // rk.solve();
+    DormandPrinceRK_solver rk(T1,INIT,n);
     rk.solve();
     return 0;
 }

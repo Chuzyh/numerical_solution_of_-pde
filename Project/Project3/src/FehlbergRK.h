@@ -23,11 +23,10 @@ public:
         {439.0/216,-8,3680.0/513,-845.0/4104},
         {-8.0/27,2,-3544.0/2565,1859.0/4104,-11.0/40}};
 
-        double tick=Ti/n_steps;double k=tick;
+        double tick=Ti/n_steps;
         result.clear();
         result.push_back(init);
         auto now=init;
-        auto U=init;
         
         for(int i=1;i<=n_steps;i++)
         {
@@ -40,7 +39,8 @@ public:
             {
                 auto y5=f(now+tick*(RKMatrix[5][0]*y0+RKMatrix[5][1]*y1+RKMatrix[5][2]*y2+RKMatrix[5][3]*y3+RKMatrix[5][4]*y4),(i+RKnodes[5])*tick);
                 now=now+tick*RKweights[5]*y5;
-            }now=now+tick*(RKweights[0]*y0+RKweights[1]*y1+RKweights[2]*y2+RKweights[3]*y3+RKweights[4]*y4);
+            }
+            now=now+tick*(RKweights[0]*y0+RKweights[1]*y1+RKweights[2]*y2+RKweights[3]*y3+RKweights[4]*y4);
             
             result.push_back(now);
         }
