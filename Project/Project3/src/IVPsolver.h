@@ -64,4 +64,12 @@ double norm_inf(vector<double> x)
     for(int i=0;i<(int)x.size();i++)re=re>abs(x[i])?re:abs(x[i]);
     return re;
 }
+double error_norm_inf(vector<double> uhat,vector<double> u,double e_abs,double e_rel)
+{
+    double re=0;
+    if(uhat.size()!=u.size())ERROR("wrong vector size");
+    for(int i=0;i<(int)u.size();i++)
+        re=max((fabs(uhat[i]-u[i]))/(e_abs+abs(u[i])*e_rel),re);
+    return re;
+}
 #endif
