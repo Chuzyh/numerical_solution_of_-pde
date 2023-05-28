@@ -5,40 +5,12 @@
 #include <eigen3/Eigen/Sparse>
 using namespace Eigen;
 using namespace std;
-const double EPS=1e-11;
+const double EPS=1e-9;
 void ERROR(string wrongmessage)
 {
     cerr<<wrongmessage<<endl;
     exit(-1);
 }
-class IVPsolver
-{
-public:
-    virtual void solve() = 0;  
-    
-protected:
-    int n_steps,p;
-    double Ti;
-    vector<double> init;
-    vector<vector<double>> result;
-public:
-    void set(int _p,double _time, vector<double> _init_val,int _n)  {p=_p,Ti=_time,init=_init_val,n_steps=_n;result.clear();}
-};
-class LMM : public IVPsolver
-{
-public:
-    vector<double> alpha,beta;
-};
-class RKM : public IVPsolver
-{
-protected:
-    vector<vector<double> > RKMatrix;
-    vector<double> RKweights,RKnodes;
-public:
-    
-    
-};
-
 template<typename T> vector<T> operator +(const vector<T> &a,const vector<T> &b)
 {
     vector<T> re;re.clear();
@@ -59,6 +31,39 @@ template<typename T> vector<T> operator *(const T &a,const vector<T> &b)
     for(int i=0;i<(int)b.size();i++)re.push_back(a*b[i]);
     return re;
 }
+class IVPsolver
+{
+public:
+    virtual void solve() = 0;  
+    
+protected:
+    int n_steps,p;
+    double Ti;
+    vector<double> init;
+    vector<vector<double>> result;
+public:
+    void set(int _p,double _time, vector<double> _init_val,int _n)  {p=_p,Ti=_time,init=_init_val,n_steps=_n;result.clear();}
+    vector<double> error(vector<double> exact)
+    {
+        return result[result.size()-1]-exact;
+    }
+};
+class LMM : public IVPsolver
+{
+public:
+    vector<double> alpha,beta;
+};
+class RKM : public IVPsolver
+{
+protected:
+    vector<vector<double> > RKMatrix;
+    vector<double> RKweights,RKnodes;
+public:
+    
+    
+};
+
+
 vector<double> f(const vector<double> &v,double t)
 {
     double mu=1.0/81.45;

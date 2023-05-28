@@ -1,9 +1,6 @@
 {
-    "n": [32, 64, 128, 256,512,1024,2048,4096,8192,16384,32768,65536],
-    "condition": ["Dirichlet","Neumann","mixed"],
-    "restriction_operators": ["full_weighting","injection"],
-    "interpolation_operators": ["linear","quadratic"],
-    "cycles": ["V_cycle","FMG"],
-    "esplion":1e-18
+    "tick": [0.004,0.002,0.001,0.0005],
+    "method": ["AdamsBashforth","AdamsMoulton","BackDifferFormula","classicalRK","DormandPrinceRK","ESDIRK","FehlbergRK","GaussLegendreRK"],
+    "p":[[1,2,3,4],[2,3,4,5],[1,2,3,4],[4],[5],[5],[4,5],[1,2,3]]
 }
 

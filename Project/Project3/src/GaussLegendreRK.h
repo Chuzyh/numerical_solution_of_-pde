@@ -27,7 +27,7 @@ public:
             {5.0/36+sqrt(15.0)/30,2.0/9+sqrt(15.0)/15,5.0/36}};
         }else ERROR("not finished");
         
-
+        if(p==1)n_steps*=40;
         double tick=Ti/n_steps;
         result.clear();
         result.push_back(init);
