@@ -3,14 +3,10 @@
 #include "IVPsolver.h"
 class FehlbergRK_solver: public RKM
 {
-private:
-    int n_steps,p;
-    double Ti;
-    vector<double> init;
-    vector<vector<double>> result;
 public:
     FehlbergRK_solver() {}
-    FehlbergRK_solver(int p,double time, vector<double> init_val,int n) : p(p),Ti(time), init(init_val),n_steps(n) {}
+    static pIVPsolver createIVPsolver() { return pIVPsolver(new FehlbergRK_solver()); }
+    
     void solve()
     {
         if(p==4)RKweights={25.0/216,0,1408.0/2565,2197.0/4104,-1.0/5,0};
@@ -49,5 +45,9 @@ public:
             cout<<result[i][0]<<' '<<result[i][1]<<endl;
         fclose(stdout);
     }
-};
+};void register_FRK()
+    {
+        classFactory &F=classFactory::createFactory();
+        F.registerProduct("FehlbergRK",[](){return FehlbergRK_solver::createIVPsolver();});
+    }
 #endif

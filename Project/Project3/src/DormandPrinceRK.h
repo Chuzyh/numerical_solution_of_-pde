@@ -4,15 +4,11 @@
 class DormandPrinceRK_solver: public RKM
 {
 private:
-    int n_steps;
-    double Ti=-1,rho_max=2.0,rho_min=0.5,rho=0.8,q=4.0;
+    double rho_max=2.0,rho_min=0.5,rho=0.8,q=4.0;
     double e_rel=1e-4,e_abs=1e-8;
-    vector<double> init;
-    vector<vector<double>> result;
 public:
     DormandPrinceRK_solver() {}
-    DormandPrinceRK_solver(double time, vector<double> init_val,int n) : Ti(time), init(init_val),n_steps(n) {}
-    DormandPrinceRK_solver(vector<double> init_val,int n) : init(init_val),n_steps(n) {}
+    static pIVPsolver createIVPsolver() { return pIVPsolver(new DormandPrinceRK_solver()); }
     void solve()
     {
         RKweights={5179.0/57600,0,7571.0/16695,393.0/640,-92097.0/339200,187.0/2100,1.0/40};
@@ -76,4 +72,9 @@ public:
         fclose(stdout);
     }
 };
+void register_DPRK()
+{
+    classFactory &F=classFactory::createFactory();
+    F.registerProduct("DormandPrinceRK",[](){return DormandPrinceRK_solver::createIVPsolver();});
+}
 #endif

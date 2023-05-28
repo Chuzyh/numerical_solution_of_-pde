@@ -3,14 +3,10 @@
 #include "IVPsolver.h"
 class AdamsBashforth_solver: public LMM
 {
-private:
-    int n_steps,p;
-    double Ti;
-    vector<double> init;
-    vector<vector<double>> result;
 public:
     AdamsBashforth_solver() {}
-    AdamsBashforth_solver(int _p, double time, vector<double> init_val,int n) :p(_p), Ti(time), init(init_val),n_steps(n) {}
+    static pIVPsolver createIVPsolver() { return pIVPsolver(new AdamsBashforth_solver()); }
+    
     void solve()
     {
         double tick=Ti/n_steps;
@@ -54,4 +50,9 @@ public:
         fclose(stdout);
     }
 };
+void register_ABF()
+{
+    classFactory &F=classFactory::createFactory();
+    F.registerProduct("AdamsBashforth",[](){return AdamsBashforth_solver::createIVPsolver();});
+}
 #endif

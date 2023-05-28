@@ -3,14 +3,9 @@
 #include "IVPsolver.h"
 class GaussLegendreRK_solver: public RKM
 {
-private:
-    int n_steps,p;
-    double Ti;
-    vector<double> init;
-    vector<vector<double>> result;
 public:
     GaussLegendreRK_solver() {}
-    GaussLegendreRK_solver(int _p,double time, vector<double> init_val,int n) : p(_p),Ti(time), init(init_val),n_steps(n) {}
+    static pIVPsolver createIVPsolver() { return pIVPsolver(new GaussLegendreRK_solver()); }
     void solve()
     {
         if(p==1)
@@ -91,4 +86,9 @@ public:
         fclose(stdout);
     }
 };
+void register_GaussLegendreRK()
+{
+    classFactory &F=classFactory::createFactory();
+    F.registerProduct("GaussLegendreRK",[](){return GaussLegendreRK_solver::createIVPsolver();});
+}
 #endif

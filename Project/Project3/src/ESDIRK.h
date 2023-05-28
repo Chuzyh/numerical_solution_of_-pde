@@ -3,14 +3,9 @@
 #include "IVPsolver.h"
 class ESDIRK_solver: public RKM
 {
-private:
-    int n_steps;
-    double Ti;
-    vector<double> init;
-    vector<vector<double>> result;
 public:
     ESDIRK_solver() {}
-    ESDIRK_solver(double time, vector<double> init_val,int n) : Ti(time), init(init_val),n_steps(n) {}
+    static pIVPsolver createIVPsolver() { return pIVPsolver(new ESDIRK_solver()); }
     void solve()
     {
         RKweights={82889.0/524892,0,15625.0/83664,69875.0/102672,-2260.0/8211,1.0/4};
@@ -68,4 +63,9 @@ public:
         fclose(stdout);
     }
 };
+void register_ESDIRK()
+{
+    classFactory &F=classFactory::createFactory();
+    F.registerProduct("ESDIRK",[](){return ESDIRK_solver::createIVPsolver();});
+}
 #endif

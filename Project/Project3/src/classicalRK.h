@@ -3,14 +3,11 @@
 #include "IVPsolver.h"
 class classicalRK_solver: public RKM
 {
-private:
-    int n_steps;
-    double Ti;
-    vector<double> init;
-    vector<vector<double>> result;
+
 public:
     classicalRK_solver() {}
-    classicalRK_solver(double time, vector<double> init_val,int n) : Ti(time), init(init_val),n_steps(n) {}
+    static pIVPsolver createIVPsolver() { return pIVPsolver(new classicalRK_solver()); }
+    
     void solve()
     {
         RKweights={1.0/6,2.0/6,2.0/6,1.0/6};
@@ -35,5 +32,9 @@ public:
             cout<<result[i][0]<<' '<<result[i][1]<<endl;
         fclose(stdout);
     }
-};
+};void register_CRK()
+    {
+        classFactory &F=classFactory::createFactory();
+        F.registerProduct("classicalRK",[](){return classicalRK_solver::createIVPsolver();});
+    }
 #endif

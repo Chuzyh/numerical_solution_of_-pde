@@ -15,6 +15,14 @@ class IVPsolver
 {
 public:
     virtual void solve() = 0;  
+    
+protected:
+    int n_steps,p;
+    double Ti;
+    vector<double> init;
+    vector<vector<double>> result;
+public:
+    void set(int _p,double _time, vector<double> _init_val,int _n)  {p=_p,Ti=_time,init=_init_val,n_steps=_n;result.clear();}
 };
 class LMM : public IVPsolver
 {
@@ -23,9 +31,12 @@ public:
 };
 class RKM : public IVPsolver
 {
-public:
-    vector<double> RKweights,RKnodes;
+protected:
     vector<vector<double> > RKMatrix;
+    vector<double> RKweights,RKnodes;
+public:
+    
+    
 };
 
 template<typename T> vector<T> operator +(const vector<T> &a,const vector<T> &b)
@@ -72,4 +83,31 @@ double error_norm_inf(vector<double> uhat,vector<double> u,double e_abs,double e
         re=max((fabs(uhat[i]-u[i]))/(e_abs+abs(u[i])*e_rel),re);
     return re;
 }
+class classFactory
+{
+public:
+    using CreateMethodCallback = std::unique_ptr<IVPsolver> (*)();
+
+private:
+    using CallbackMap = map<string, CreateMethodCallback>;
+    CallbackMap mp;
+    classFactory() = default;
+    ~classFactory() = default;
+
+public:
+    static classFactory &createFactory(){static classFactory object;return object;}
+    void registerProduct(string Id, CreateMethodCallback createFn){mp.insert(typename CallbackMap::value_type(Id, createFn)).second; }
+
+    void unregisterMethod(string Id) {mp.erase(Id);}
+
+    unique_ptr<IVPsolver> createMethod(string Id)
+    {
+        auto it = mp.find(Id);
+        if (it == mp.end())ERROR("Unknown Method.");
+        return (it->second)();
+    }
+};
+using pIVPsolver = unique_ptr<IVPsolver>;
+using Fac = classFactory;
+
 #endif
