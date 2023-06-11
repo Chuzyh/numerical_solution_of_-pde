@@ -27,6 +27,7 @@
 \usepackage{float}
 \usepackage{amssymb}
 \usepackage{listings}
+\usepackage{tikz}
 % some common command
 \newcommand{\dif}{\mathrm{d}}
 \newcommand{\avg}[1]{\left\langle #1 \right\rangle}
@@ -238,4 +239,222 @@ $$
   \caption{Beam-Warming 方法的$z_p$示意图}
 \end{figure}
 
+\section{Exercise 12.87}
+对于$\mu=0$，有决定域为
+\begin{center}
+  \begin{tikzpicture}
+    \draw[step=1cm,dashed,gray,very thin] (0,0) grid (6,3);
+    \fill (3, 0) circle (2pt);
+    \fill (3, 1) circle (2pt);
+    \fill (3, 2) circle (2pt);
+    \fill (3, 3) circle (2pt);
+    \coordinate [label=below:$x_j$] (A) at (3,0);
+    \coordinate [label=left:$t_0$] (B) at (0,0);
+    \coordinate [label=left:$t_3$] (C) at (0,3);
+    \coordinate [label=right:$x_{j+3}$] (D) at (6,0);
+  \end{tikzpicture}
+\end{center}
+
+对于$\mu=-1$，有决定域为
+\begin{center}
+  \begin{tikzpicture}
+    \draw[step=1cm,dashed,gray,very thin] (0,0) grid (6,3);
+    \fill (6, 0) circle (2pt);
+    \fill (5, 1) circle (2pt);
+    \fill (4, 2) circle (2pt);
+    \fill (3, 3) circle (2pt);
+    \coordinate [label=below:$x_j$] (A) at (3,0);
+    \coordinate [label=left:$t_0$] (B) at (0,0);
+    \coordinate [label=left:$t_3$] (C) at (0,3);
+    \coordinate [label=right:$x_{j+3}$] (D) at (6,0);
+  \end{tikzpicture}
+\end{center}
+
+对于$\mu=-2$，则有$U^{n+1}_j = 2U^{n}_{j+1} - U_j^n$，故决定域为
+  \begin{center}
+    \begin{tikzpicture}
+      \draw[step=1cm,dashed,gray,very thin] (0,0) grid (6,3);
+      \fill (3, 0) circle (2pt);
+      \fill (4, 0) circle (2pt);
+      \fill (5, 0) circle (2pt);
+      \fill (6, 0) circle (2pt);
+      \fill (3, 1) circle (2pt);
+      \fill (4, 1) circle (2pt);
+      \fill (5, 1) circle (2pt);
+      \fill (3, 2) circle (2pt);
+      \fill (4, 2) circle (2pt);
+      \fill (3, 3) circle (2pt);
+      \coordinate [label=below:$x_j$] (A) at (3,0);
+      \coordinate [label=left:$t_0$] (B) at (0,0);
+      \coordinate [label=left:$t_3$] (C) at (0,3);
+      \coordinate [label=right:$x_{j+3}$] (D) at (6,0);
+    \end{tikzpicture}
+  \end{center}
+  \section{Exercise 12.89}
+  
+  对于$\mu=1$，有$U^{n+1}_j = U^n_{j-1}$，故决定域为
+  \begin{center}
+      \begin{tikzpicture}
+        \draw[step=1cm,dashed,gray,very thin] (0,0) grid (6,3);
+        \fill (0, 0) circle (2pt);
+        \fill (1, 1) circle (2pt);
+        \fill (2, 2) circle (2pt);
+        \fill (3, 3) circle (2pt);
+        \coordinate [label=below:$x_j$] (A) at (3,0);
+        \coordinate [label=left:$t_0$] (B) at (0,0);
+        \coordinate [label=left:$t_3$] (C) at (0,3);
+        \coordinate [label=right:$x_{j+3}$] (D) at (6,0);
+      \end{tikzpicture}
+    \end{center}
+
+    对于$\mu=-1$，有$U^{n+1}_j = U^n_{j+1}$，故决定域为
+\begin{center}
+    \begin{tikzpicture}
+      \draw[step=1cm,dashed,gray,very thin] (0,0) grid (6,3);
+      \fill (6, 0) circle (2pt);
+      \fill (5, 1) circle (2pt);
+      \fill (4, 2) circle (2pt);
+      \fill (3, 3) circle (2pt);
+      \coordinate [label=below:$x_j$] (A) at (3,0);
+      \coordinate [label=left:$t_0$] (B) at (0,0);
+      \coordinate [label=left:$t_3$] (C) at (0,3);
+      \coordinate [label=right:$x_{j+3}$] (D) at (6,0);
+    \end{tikzpicture}
+  \end{center}
+
+
+  \section{Exercise 12.98}
+  首先，我们展开Leapfrog方法的方程，用$v(x,t)$代替$U^n_j$，得到
+$$
+\frac{v(x, t+k) - v(x,t - k)}{2k} = -\frac{a}{2h}(v(x+h, t) - v(x-h, t))
+$$
+
+然后，将所有项在$(x,t)$处进行泰勒级数展开：
+
+$$
+\begin{aligned}
+&\frac{1}{2}\left(\frac{v(x, t+k) - v(x, t)}{k} + \frac{v(x,t) - v(x,t - k)}{k}\right) \
+&= v_t+\frac{1}{6}k^2v_{ttt}\
+&= -a(v_x + \frac{h^2}{6}v_{xxx})+O(k^3)
+\end{aligned}
+$$
+
+由$v_{ttt} = -a^3v_{xxx} + O(k^3)$，我们有
+
+$$
+v_t + av_x = \frac{k^2}{6}v_{ttt} -\frac{ah^2}{6}v_{xxx} + O(k^3) = \frac{ah^2}{6}(\mu^2 - 1)v_{xxx} + O(k^3)
+$$
+
+因此，Leapfrog方法的修正方程为(12.94)。
+
+
+\section{Exercise 12.99}
+由
+
+$$
+v_j^{n+1} = v_j^n - \frac{a\Delta t}{2\Delta x}(3v_j^n - 4v_{j-1}^n + v_{j-2}^n) + \frac{a^2\Delta t^2}{2\Delta x^2}(v_{j-2}^n - 2v_{j-1}^n + v_j^n)
+$$
+
+将$v_j^n$替换为$v(x,t)$，然后对该方程进行泰勒展开，得到：
+
+$$
+\begin{aligned}
+v_t + av_x + \frac{ah^2}{6}(1-\mu)(1-2\mu)\frac{\partial^3 v}{\partial x^3} + O(\Delta t^2, \Delta x^3)
+= v_t + av_x + \frac{ah^2}{6}(1-\mu)(1-2\mu)v_{xxx} + O(\Delta t^2, \Delta x^3)
+\end{aligned}
+$$
+
+因此，Beam-Warming方法的修正方程为：
+
+$$
+v_t + av_x + \frac{ah^2}{6}(1-\mu)(1-2\mu)v_{xxx} = 0
+$$
+
+故 $a_1 = a, a_3 = - \frac{ah^2}{6}(\mu-1)(\mu-2)$, 由(F.46)
+$$\omega(\xi) = a_1\xi + a_3\xi^3 = a\xi - \frac{ah^2}{6}(\mu-1)(\mu-2)\xi^3$$
+
+代入得到$$\begin{aligned}
+  &C_p(\xi) = \frac{\omega(\xi)}{\xi} = a + \frac{ah^2}{6}(\mu-1)(\mu-2)\xi^2\\
+  &C_g(\xi) = \frac{d\omega}{d\xi} = a + \frac{ah^2}{2}(\mu-1)(\mu-2)\xi^2
+\end{aligned}$$
+
+\section{Exercise 12.100}
+当$\mu = 1$时，Lax-Wendroff方法和Leapfrog方法的修正方程都变为了标准的对流方程$v_t + av_x = 0$，即它们成为了该方程的精确解。这意味着当$\mu = 1$时，两种方法都是精确的。
+
+因为两种方法都是精确的，所以他们比$k=0.8h$时的效果好。
+\section{Exercise 12.102}
+$$
+v_j^{n+1} = \frac{1}{2}(v_{j+1}^n + v_{j-1}^n) - \frac{\mu}{2}(v_{j+1}^n - v_{j-1}^n)
+$$
+
+其中$\mu = \frac{ak}{h}$。
+
+为了应用von Neumann分析，我们假设$v_j^n = g(\xi)^ne^{i\xi jh}$，其中$\xi$是波数。将其代入Lax-Friedrichs方法中，我们得到：
+
+$$
+g(\xi)^{n+1}e^{i\xi jh} = \frac{1}{2}(g(\xi)^ne^{i\xi(j+1)h} + g(\xi)^ne^{i\xi(j-1)h}) - \frac{\mu}{2}(g(\xi)^ne^{i\xi(j+1)h} - g(\xi)^ne^{i\xi(j-1)h})
+$$
+
+简化这个表达式，我们得到：
+
+$$
+g(\xi) = \frac{1}{2}(1+\mu e^{-i\xi h}) \pm \frac{1}{2}\sqrt{(1-\mu e^{-i\xi h})^2 - 4\mu^2\sin^2(\xi h/2)}
+$$
+
+为了进一步简化这个表达式，我们可以使用恒等式$\cos\theta = \frac{1}{2}(e^{i\theta} + e^{-i\theta})$和$\sin\theta = \frac{1}{2i}(e^{i\theta} - e^{-i\theta})$。这给出了：
+
+$$
+g(\xi) = \cos(\xi h) - i\mu\sin(\xi h)
+$$
+
+这是式(12.99)中给出的放大因子。
+
+为了找到稳定性条件，我们需要确保对于所有的$\xi$，$|g(\xi)| \leq 1$。这给出了：
+
+$$
+|g(\xi)|^2 = \cos^2(\xi h) + \mu^2\sin^2(\xi h) \leq 1
+$$
+
+简化这个不等式，我们得到：
+
+$$
+\mu^2 \leq 1 - \cos^2(\xi h) = \sin^2(\xi h)
+$$
+
+这个不等式对于所有的$\xi$成立，当且仅当$\mu \leq 1$。因此，Lax-Friedrichs方法仅在$\mu \leq 1$时稳定。
+\section{Exercise 12.103}
+
+$$
+v_j^{n+1} = v_j^n - \frac{\mu}{2}(v_{j+1}^n - v_{j-1}^n) + \frac{\mu^2}{2}(v_{j+1}^n - 2v_j^n + v_{j-1}^n)
+$$
+
+其中，$\mu = \frac{ak}{h}$。
+
+为了应用von Neumann分析，我们假设$v_j^n = g(\xi)^ne^{i\xi jh}$，其中$\xi$是波数。将其代入Lax-Wendroff方法中，我们得到：
+
+$$
+g(\xi)^{n+1}e^{i\xi jh} = g(\xi)^ne^{i\xi jh} - \frac{\mu}{2}(g(\xi)^ne^{i\xi(j+1)h} - g(\xi)^ne^{i\xi(j-1)h}) + \frac{\mu^2}{2}(g(\xi)^ne^{i\xi(j+1)h} - 2g(\xi)^ne^{i\xi jh} + g(\xi)^ne^{i\xi(j-1)h})
+$$
+
+简化这个表达式，我们得到：
+
+$$
+g(\xi) = 1 - i\mu\sin(\xi h) - 2\mu^2\sin^2(\xi h/2)
+$$
+
+这是式(12.100)中给出的放大因子。
+
+为了找到稳定性条件，我们需要确保对于所有的$\xi$，$|g(\xi)| \leq 1$。这给出了：
+
+$$
+|g(\xi)|^2 = (1 - 2\mu^2\sin^2(\xi h/2))^2 + \mu^2\sin^2(\xi h) \leq 1
+$$
+
+简化这个不等式，我们得到：
+
+$$
+\mu^2 \leq \frac{1}{2}
+$$
+
+这个不等式对于所有的$\xi$成立，当且仅当$\mu^2 \leq \frac{1}{2}$。因此，Lax-Wendroff方法仅在$0 < \mu^2 \leq \frac{1}{2}$时稳定。
 \end{document}
